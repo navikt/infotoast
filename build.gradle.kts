@@ -1,4 +1,7 @@
 val prometheusVersion = "0.16.0"
+val logstashLogbackEncoderVersion = "8.0"
+val opentelemetryLogbackMdcVersion = "2.16.0-alpha"
+
 
 plugins {
     kotlin("jvm") version "2.1.0"
@@ -29,7 +32,9 @@ dependencies {
     implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
     implementation("io.prometheus:simpleclient_common:$prometheusVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:${opentelemetryLogbackMdcVersion}")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
