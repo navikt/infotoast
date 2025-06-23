@@ -1,2 +1,14 @@
 server:
   port: 8080
+  shutdown: graceful
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  main:
+    banner-mode: 'off'
+  profiles:
+    active: default
+  application:
+    name: infotoast
