@@ -10,6 +10,12 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 }
 
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 group = "no.nav.tsm"
 version = "0.0.2"
 java.sourceCompatibility = JavaVersion.VERSION_21
