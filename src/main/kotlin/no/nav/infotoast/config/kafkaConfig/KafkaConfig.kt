@@ -29,7 +29,6 @@ class KafkaConfig(
     @Value("\${KAFKA_TRUSTSTORE_PATH}") private val kafkaTruststorePath: String,
     @Value("\${KAFKA_CREDSTORE_PASSWORD}") private val kafkaCredstorePassword: String,
     @Value("\${KAFKA_KEYSTORE_PATH}") private val kafkaKeystorePath: String,
-    @Value("\${aiven-kafka.auto-offset-reset}") private val kafkaAutoOffsetReset: String,
 ) {
 
     private val javaKeystore = "JKS"
