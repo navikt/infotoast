@@ -1,7 +1,8 @@
 val prometheusVersion = "0.16.0"
 val logstashLogbackEncoderVersion = "8.0"
 val opentelemetryLogbackMdcVersion = "2.16.0-alpha"
-
+val kafkaClientsVersion = "3.9.0"
+val jacksonVersion= "2.17.2"
 
 plugins {
     kotlin("jvm") version "2.1.0"
@@ -34,9 +35,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.apache.kafka:kafka-clients:${kafkaClientsVersion}")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
     implementation("io.prometheus:simpleclient_common:$prometheusVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}")
     implementation("io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:${opentelemetryLogbackMdcVersion}")
