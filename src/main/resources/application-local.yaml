@@ -1,0 +1,9 @@
+spring:
+  # Kafka container
+  kafka:
+    bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:9092}
+    security:
+      protocol: plaintext
+
+nais:
+  cluster: ${NAIS_CLUSTER:local}

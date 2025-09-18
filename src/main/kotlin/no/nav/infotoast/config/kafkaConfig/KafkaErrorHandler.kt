@@ -1,4 +1,5 @@
 package no.nav.infotoast.config.kafkaConfig
+
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.ConsumerRecords
@@ -10,10 +11,8 @@ import org.springframework.util.backoff.FixedBackOff
 import org.springframework.util.backoff.FixedBackOff.UNLIMITED_ATTEMPTS
 
 @Component
-class KafkaErrorHandler : DefaultErrorHandler(
-    null,
-    FixedBackOff(BACKOFF_INTERVAL, UNLIMITED_ATTEMPTS)
-) {
+class KafkaErrorHandler :
+    DefaultErrorHandler(null, FixedBackOff(BACKOFF_INTERVAL, UNLIMITED_ATTEMPTS)) {
     companion object {
         private const val BACKOFF_INTERVAL = 60_000L
     }
@@ -71,7 +70,8 @@ class KafkaErrorHandler : DefaultErrorHandler(
             Exception Type: ${thrownException::class.simpleName}
             Exception Message: ${thrownException.message}
             Stacktrace:
-            """.trimIndent(),
+            """
+                .trimIndent(),
             thrownException
         )
     }

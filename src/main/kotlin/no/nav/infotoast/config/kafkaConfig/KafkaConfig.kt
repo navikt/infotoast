@@ -1,18 +1,11 @@
 package no.nav.infotoast.config.kafkaConfig
 
-import no.nav.infotoast.utils.JacksonKafkaSerializer
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerConfig.ACKS_CONFIG
-import org.apache.kafka.clients.producer.ProducerConfig.COMPRESSION_TYPE_CONFIG
-import org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
-import org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -39,13 +32,16 @@ class KafkaConfig(
         props: KafkaProperties,
         errorHandler: KafkaErrorHandler
     ): ConcurrentKafkaListenerContainerFactory<String, ByteArray?> {
-        val consumerFactory = DefaultKafkaConsumerFactory(
-            props.buildConsumerProperties(null).apply {
-                put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
-                put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1)
-                put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true)
-            }, StringDeserializer(), ByteArrayDeserializer()
-        )
+        val consumerFactory =
+            DefaultKafkaConsumerFactory(
+                props.buildConsumerProperties(null).apply {
+                    put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+                    put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1)
+                    put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true)
+                },
+                StringDeserializer(),
+                ByteArrayDeserializer()
+            )
 
         val factory = ConcurrentKafkaListenerContainerFactory<String, ByteArray?>()
         factory.consumerFactory = consumerFactory

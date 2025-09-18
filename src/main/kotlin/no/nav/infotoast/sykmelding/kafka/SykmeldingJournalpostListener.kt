@@ -1,15 +1,14 @@
 package no.nav.infotoast.sykmelding.kafka
 
-import no.nav.infotoast.utils.applog
+import no.nav.infotoast.utils.logger
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
-class SykmeldingJournalpostListener(
-) {
+class SykmeldingJournalpostListener() {
 
-    val logger = applog()
+    val logger = logger()
 
     @KafkaListener(
         topics = ["\${spring.kafka.topics.sykmeldinger-journalpost}"],
@@ -17,6 +16,8 @@ class SykmeldingJournalpostListener(
         containerFactory = "containerFactory",
     )
     fun listen(cr: ConsumerRecord<String, ByteArray>) {
-        logger.info("sykmeldingRecord from kafka: key=${cr.key()}, offset=${cr.offset()}, partition: ${cr.partition()}")
+        logger.info(
+            "sykmeldingRecord from kafka: key=${cr.key()}, offset=${cr.offset()}, partition: ${cr.partition()}"
+        )
     }
 }

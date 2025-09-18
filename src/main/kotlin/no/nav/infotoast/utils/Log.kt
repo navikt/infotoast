@@ -1,15 +1,10 @@
 package no.nav.infotoast.utils
 
+import kotlin.jvm.java
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import kotlin.jvm.java
 
-inline fun <reified T> T.applog(): Logger {
-    return LoggerFactory.getLogger(T::class.java)
-}
-inline fun <reified T> T.securelog(): Logger {
-    return LoggerFactory.getLogger("securelog")
-}
+inline fun <reified T> T.logger(): Logger = LoggerFactory.getLogger(T::class.java)
 
-
-
+inline fun <reified T> T.teamLogger(): Logger =
+    LoggerFactory.getLogger("teamlog.${T::class.java.name}")
