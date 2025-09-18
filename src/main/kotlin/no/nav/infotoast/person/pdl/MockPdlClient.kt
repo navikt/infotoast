@@ -1,0 +1,32 @@
+package no.nav.infotoast.person.pdl
+
+import java.time.LocalDate
+import no.nav.infotoast.person.Navn
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Component
+
+@Profile("local", "test")
+@Component
+class MockPdlClient : IPdlClient {
+    override fun getPerson(fnr: String): Result<PdlPerson> {
+        return Result.success(
+            PdlPerson(
+                navn =
+                    Navn(
+                        fornavn = "Ola",
+                        mellomnavn = null,
+                        etternavn = "Nordmann",
+                    ),
+                foedselsdato = LocalDate.of(1991, 4, 12),
+                identer =
+                    listOf(
+                        Ident(
+                            ident = fnr,
+                            gruppe = IDENT_GRUPPE.FOLKEREGISTERIDENT,
+                            historisk = false,
+                        ),
+                    ),
+            )
+        )
+    }
+}

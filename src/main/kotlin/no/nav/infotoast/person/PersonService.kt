@@ -1,0 +1,62 @@
+package no.nav.tsm.syk_inn_api.person
+
+import no.nav.infotoast.person.Person
+import no.nav.infotoast.utils.logger
+import no.nav.infotoast.utils.teamLogger
+import no.nav.infotoast.person.pdl.IDENT_GRUPPE
+import no.nav.infotoast.person.pdl.IPdlClient
+import no.nav.infotoast.person.pdl.PdlPerson
+import org.springframework.stereotype.Service
+
+@Service
+class PersonService(
+    private val pdlClient: IPdlClient,
+) {
+    private val logger = logger()
+    private val teamLog = teamLogger()
+
+    fun getPersonByIdent(ident: String): Result<Person> {
+        val person: PdlPerson =
+            pdlClient.getPerson(ident).fold({ it }) {
+                teamLog.error("Error while fetching person info for fnr=$ident", it)
+                logger.error("Error while fetching person info from PDL, check secure logs")
+                return Result.failure(it)
+            }
+
+        val currentIdent =
+            person.identer
+                .find { it.gruppe == IDENT_GRUPPE.FOLKEREGISTERIDENT && !it.historisk }
+                ?.ident
+
+        if (currentIdent == null) {
+            return Result.failure(
+                IllegalStateException(
+                    "No valid FOLKEREGISTERIDENT found for person with ident $ident"
+                )
+            )
+        }
+
+        if (person.navn == null) {
+            return Result.failure(
+                IllegalStateException("No name found for person with ident $ident")
+            )
+        }
+
+        if (person.foedselsdato == null) {
+            return Result.failure(
+                IllegalStateException("No fødselsdato found for person with ident $ident")
+            )
+        }
+
+        return Result.success(
+            Person(
+//                navn = person.navn,
+//                ident = currentIdent,
+//                fodselsdato = person.foedselsdato,
+                gt = person.,
+                adressebeskyttelse = TODO(),
+                sisteKontaktAdresseIUtlandet = TODO(),
+            )
+        )
+    }
+}

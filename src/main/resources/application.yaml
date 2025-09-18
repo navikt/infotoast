@@ -12,6 +12,35 @@ spring:
     active: default
   application:
     name: infotoast
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
+          jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
+          audiences: ${AZURE_APP_CLIENT_ID}
+      client:
+        registration:
+          syfohelsenettproxy-m2m:
+            authorization-grant-type: client_credentials
+            client-authentication-method: client_secret_basic
+            client-id: ${azure.app.client.id}
+            client-secret: ${azure.app.client.secret}
+            provider: aad
+            scope:
+              - ${syfohelsenettproxy.scope}
+
+          pdlcache-m2m:
+            authorization-grant-type: client_credentials
+            client-authentication-method: client_secret_basic
+            client-id: ${azure.app.client.id}
+            client-secret: ${azure.app.client.secret}
+            provider: aad
+            scope:
+              - ${tsmpdl.scope}
+        provider:
+          aad:
+            issuer-uri: ${azure.openid.config.issuer}
   kafka:
     bootstrap-servers: ${kafka.brokers}
     security:
@@ -23,9 +52,14 @@ spring:
       key-store-location: file:${kafka.keystore.path}
       key-store-type: PKCS12
       key-store-password: ${kafka.credstore.password}
-    topics:
-      sykmeldinger-journalpost: tsm.sykmeldinger-journalpost
 
+# Kafka topics that infotoast uses
+kafka:
+  topics:
+    sykmeldinger-journalpost: tsm.sykmeldinger-journalpost
+    sykmeldinger: tsm.sykmeldinger
+
+# spring health checks
 management:
   endpoint:
     health.probes.enabled: true
@@ -36,3 +70,18 @@ management:
   health:
     livenessstate.enabled: true
     readinessState.enabled: true
+
+# External services that infotoast interacts with
+services:
+  teamsykmelding:
+    syfohelsenettproxy:
+      url: ${SYFOHELSENETTPROXY_URL}
+    pdlcache:
+      url: ${TSM_PDL_ENDPOINT_URL}
+
+
+# Config for Texas
+nais:
+  token_endpoint: ${NAIS_TOKEN_ENDPOINT}
+  cluster: ${NAIS_CLUSTER_NAME}
+

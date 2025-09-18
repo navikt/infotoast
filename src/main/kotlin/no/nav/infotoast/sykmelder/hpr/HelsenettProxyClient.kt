@@ -1,0 +1,83 @@
+package no.nav.infotoast.sykmelder.hpr
+
+import no.nav.infotoast.security.TexasClient
+import no.nav.infotoast.utils.logger
+import no.nav.infotoast.utils.teamLogger
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
+import org.springframework.stereotype.Component
+import org.springframework.web.client.RestClient
+import org.springframework.web.client.RestClientResponseException
+
+interface IHelsenettProxyClient {
+    fun getSykmelderByFnr(behandlerFnr: String, callId: String): Result<HprSykmelder>
+}
+
+@Profile("!local & !test")
+@Component
+class HelsenettProxyClient(
+    restClientBuilder: RestClient.Builder,
+    private val texasClient: TexasClient,
+    @param:Value($$"${services.teamsykmelding.syfohelsenettproxy.url}") private val baseUrl: String,
+) : IHelsenettProxyClient {
+    private val logger = logger()
+    private val teamLogger = teamLogger()
+
+    private val restClient: RestClient = restClientBuilder.baseUrl(baseUrl).build()
+
+    override fun getSykmelderByFnr(behandlerFnr: String, callId: String): Result<HprSykmelder> {
+        val (accessToken) = getToken()
+
+        teamLogger.info(
+            "Getting sykmelder for fnr=$behandlerFnr, sykmeldingId=$callId",
+        )
+
+        return try {
+            val response =
+                restClient
+                    .get()
+                    .uri { uriBuilder -> uriBuilder.path("/api/v2/behandler").build() }
+                    .headers {
+                        it.set("Content-Type", "application/json")
+                        it.set("Nav-CallId", callId)
+                        it.set("behandlerFnr", behandlerFnr)
+                        it.set("Authorization", "Bearer $accessToken")
+                    }
+                    .retrieve()
+                    .body(HprSykmelder::class.java)
+
+            if (response != null) {
+                logger.info(
+                    "Response from HelsenettProxy was successful for sykmeldingId=$callId",
+                )
+                Result.success(response)
+            } else {
+                val msg = "HelsenettProxy returned null response for sykmeldingId=$callId"
+                logger.warn(msg)
+                teamLogger.warn("$msg and hpr=$behandlerFnr")
+                Result.failure(IllegalStateException("HelsenettProxy returned no Sykmelder"))
+            }
+        } catch (e: RestClientResponseException) {
+            val status = e.statusCode
+            val body = e.responseBodyAsString
+            teamLogger.error(
+                "HelsenettProxy HTTP ${status.value()}: $body, fnr=$behandlerFnr, callId=$callId",
+                e
+            )
+            logger.error(
+                "HelsenettProxy request failed with ${status.value()} for sykmeldingId=$callId",
+                e
+            )
+            Result.failure(
+                IllegalStateException("HelsenettProxy error (${status.value()}): $body", e)
+            )
+        } catch (e: Exception) {
+            logger.error("Error while calling HelsenettProxy API for sykmeldingId=$callId", e)
+            teamLogger.error("Exception with hpr=$behandlerFnr for sykmeldingId=$callId", e)
+            Result.failure(e)
+        }
+    }
+
+    fun getToken(): TexasClient.TokenResponse =
+        texasClient.requestToken("teamsykmelding", "syfohelsenettproxy")
+}

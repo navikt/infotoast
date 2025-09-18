@@ -40,3 +40,28 @@ spec:
   kafka:
     pool: nav-dev
 
+  accessPolicy:
+    inbound:
+      rules:
+        - application: macgyver
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
+        - application: syfohelsenettproxy
+          namespace: teamsykmelding
+        - application: tsm-pdl-cache
+          namespace: tsm
+  ingresses:
+    - "https://infotoast.intern.dev.nav.no"
+  env:
+    - name: SYFOHELSENETTPROXY_SCOPE
+      value: api://dev-gcp.teamsykmelding.syfohelsenettproxy/.default
+    - name: TSMPDL_SCOPE
+      value: api://dev-gcp.tsm.tsm-pdl-cache/.default
+    - name: LEGE_SUSPENSJON_PROXY_SCOPE
+      value: api://dev-gcp.team-rocket.btsys-api/.default
+    - name: TSM_PDL_ENDPOINT_URL
+      value: http://tsm-pdl-cache
+    - name: SYFOHELSENETTPROXY_URL
+      value: http://syfohelsenettproxy.teamsykmelding
