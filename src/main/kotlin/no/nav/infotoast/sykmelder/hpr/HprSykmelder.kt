@@ -18,7 +18,6 @@ data class HprKode(
     val verdi: String?,
 )
 
-
 // TODO delete?
 fun parseHelsepersonellKategori(v: String?): HelsepersonellKategori {
     return when (v) {

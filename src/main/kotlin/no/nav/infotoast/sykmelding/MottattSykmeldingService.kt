@@ -1,11 +1,11 @@
 package no.nav.infotoast.sykmelding
 
-import org.springframework.stereotype.Service
 import java.time.LocalDate
+import org.springframework.stereotype.Service
 
 @Service
 class MottattSykmeldingService {
-    //TODO implement
+    // TODO implement
 }
 
 fun List<Aktivitet>.sortedFOMDate(): List<LocalDate> = map { it.fom }.sorted()

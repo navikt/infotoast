@@ -2,7 +2,9 @@ package no.nav.infotoast.person.pdl
 
 import java.time.LocalDate
 import no.nav.infotoast.person.Navn
-//TODO this should be the content that syfosminfotrygd receives from PDL - should the cache be updated with a new endpoint ?
+
+// TODO this should be the content that syfosminfotrygd receives from PDL - should the cache be
+// updated with a new endpoint ?
 data class PdlPerson(
     val navn: Navn?,
     val foedselsdato: LocalDate?,

@@ -53,7 +53,7 @@ class PersonService(
 //                navn = person.navn,
 //                ident = currentIdent,
 //                fodselsdato = person.foedselsdato,
-                gt = person.,
+                gt = TODO(),
                 adressebeskyttelse = TODO(),
                 sisteKontaktAdresseIUtlandet = TODO(),
             )
