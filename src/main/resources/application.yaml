@@ -57,7 +57,6 @@ spring:
 kafka:
   topics:
     sykmeldinger-journalpost: tsm.sykmeldinger-journalpost
-    sykmeldinger: tsm.sykmeldinger
 
 # spring health checks
 management:
@@ -76,8 +75,11 @@ services:
   teamsykmelding:
     syfohelsenettproxy:
       url: ${SYFOHELSENETTPROXY_URL}
-    pdlcache:
-      url: ${TSM_PDL_ENDPOINT_URL}
+    smtss:
+      url: ${SMTSS_URL}
+  pdl:
+    graphql:
+      url: ${PDL_GRAPHQL_PATH}
 
 
 # Config for Texas

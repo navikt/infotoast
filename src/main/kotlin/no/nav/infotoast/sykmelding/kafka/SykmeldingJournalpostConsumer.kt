@@ -1,10 +1,9 @@
 package no.nav.infotoast.sykmelding.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.infotoast.sykmelding.SykmeldingWithJournalpostIdRecord
 import no.nav.infotoast.utils.logger
 import no.nav.infotoast.utils.teamLogger
-import no.nav.tsm.syk_inn_api.sykmelding.isBeforeYear
-import no.nav.tsm.sykmelding.input.core.model.SykmeldingRecord
 import no.nav.tsm.sykmelding.input.core.model.sykmeldingObjectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.beans.factory.annotation.Value
@@ -12,15 +11,15 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
-class SykmeldingConsumer(
+class SykmeldingJournalpostConsumer(
     @param:Value($$"${nais.cluster}") private val clusterName: String,
 ) {
     private val logger = logger()
     private val teamLogger = teamLogger()
 
     @KafkaListener(
-        topics = [$$"${kafka.topics.sykmeldinger}"],
-        groupId = "syk-inn-api-consumer",
+        topics = [$$"${kafka.topics.sykmeldinger-journalpost}"],
+        groupId = "infotoast-consumer",
         containerFactory = "kafkaListenerContainerFactory",
         batch = "false",
     )
@@ -36,28 +35,17 @@ class SykmeldingConsumer(
             return
         }
 
+        //TODO this needs a rewrite becaause we are not reading the sykmeldinger topic anymore, its the sykmeldinger-journalpost topic which has
+        // sykmeldinger and journalpostId.
+                // keyen må være sykmeldingsId
         try {
-            val sykmeldingRecord = sykmeldingObjectMapper.readValue<SykmeldingRecord>(value)
-            if (sykmeldingRecord.sykmelding.aktivitet.isEmpty()) {
-                logger.warn(
-                    "SykmeldingRecord with id=${record.key()} has no activity, skipping processing",
-                )
-                return
-            }
+            val sykmeldingWithJournalpostIdRecord = sykmeldingObjectMapper.readValue<SykmeldingWithJournalpostIdRecord>(value)
+            val sykmeldingRecord = sykmeldingWithJournalpostIdRecord.sykmeldingRecord
 
-            if (sykmeldingRecord.isBeforeYear(2024)) {
-                return // Skip processing for sykmeldinger before 2024
-            }
+            // TODO Treng vi sjekke person og sykmelder? sjekk kva infotrygd gjer. Mulig vi også må slå opp sykmelder og sende vidare til servicen.. smtss oppslaget treng.
 
-            if (
-                sykmeldingRecord.sykmelding.type ==
-                    no.nav.tsm.sykmelding.input.core.model.SykmeldingType.UTENLANDSK
-            ) {
-                return // skip processing for utenlandske sykmeldinger
-            }
-
-            // TODO Treng vi sjekke person og sykmelder? sjekk kva infotrygd gjer
             // TODO kall service som interacter med infotrygd med forespørsel.
+
         } catch (e: Exception) {
             logger.error(
                 "Kafka consumer failed, key: ${record.key()} - Error processing record",

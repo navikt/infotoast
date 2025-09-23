@@ -1,0 +1,18 @@
+query($ident: ID!){
+  hentGeografiskTilknytning(ident: $ident) {
+    gtType,
+    gtKommune,
+    gtBydel,
+    gtLand
+  }
+  hentPerson(ident: $ident) {
+    adressebeskyttelse {
+      gradering
+    }
+    kontaktadresse {
+      type,
+      gyldigFraOgMed,
+      gyldigTilOgMed
+    }
+  }
+}

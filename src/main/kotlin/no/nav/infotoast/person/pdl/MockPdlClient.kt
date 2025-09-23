@@ -11,21 +11,9 @@ class MockPdlClient : IPdlClient {
     override fun getPerson(fnr: String): Result<PdlPerson> {
         return Result.success(
             PdlPerson(
-                navn =
-                    Navn(
-                        fornavn = "Ola",
-                        mellomnavn = null,
-                        etternavn = "Nordmann",
-                    ),
-                foedselsdato = LocalDate.of(1991, 4, 12),
-                identer =
-                    listOf(
-                        Ident(
-                            ident = fnr,
-                            gruppe = IDENT_GRUPPE.FOLKEREGISTERIDENT,
-                            historisk = false,
-                        ),
-                    ),
+                gt = "Geografisk tilnærming",
+                adressebeskyttelse = null,
+                sisteKontaktAdresseIUtlandet = false,
             )
         )
     }

@@ -65,3 +65,7 @@ spec:
       value: http://tsm-pdl-cache
     - name: SYFOHELSENETTPROXY_URL
       value: http://syfohelsenettproxy.teamsykmelding
+    - name: SMTSS_URL
+      value: http://smtss
+    - name: SMTSS_CLIENT_ID
+      value: dev-gcp.teamsykmelding.smtss

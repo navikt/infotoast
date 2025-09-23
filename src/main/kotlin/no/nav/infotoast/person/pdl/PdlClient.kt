@@ -18,24 +18,30 @@ interface IPdlClient {
 class PdlClient(
     restClientBuilder: RestClient.Builder,
     private val texasClient: TexasClient,
-    @param:Value($$"${services.teamsykmelding.pdlcache.url}") private val pdlEndpointUrl: String,
+    @param:Value($$"${services.pdl.graphql.url}") private val pdlGraphqlEndpointPath: String,
 ) : IPdlClient {
-    private val restClient = restClientBuilder.baseUrl(pdlEndpointUrl).build()
+    private val restClient = restClientBuilder.baseUrl(pdlGraphqlEndpointPath).build()
     private val logger = logger()
     private val teamLogger = teamLogger()
 
+    private val temaHeader = "TEMA"
+    private val tema = "SYM"
+
     override fun getPerson(fnr: String): Result<PdlPerson> {
         val (accessToken) = getToken()
+        val graphqlQuery = PdlClient::class.java.getResource("/graphql/getPerson.graphql")?.readText()
+            ?: throw IllegalStateException("Could not load getPerson.graphql")
 
         return try {
             val response =
                 restClient
-                    .get()
-                    .uri { uriBuilder -> uriBuilder.path("/api/person").build() }
+                    .post()
+                    .body(graphqlQuery)
                     .headers {
-                        it.set("Nav-Consumer-Id", "syk-inn-api")
                         it.set("Authorization", "Bearer $accessToken")
-                        it.set("Ident", fnr)
+                        it.set("Behandlingsnummer", "B229")
+                        it.set(temaHeader, tema)
+                        it.set("Content-Type", "application/json")
                     }
                     .retrieve()
                     .body(PdlPerson::class.java)
@@ -83,5 +89,6 @@ class PdlClient(
     }
 
     private fun getToken(): TexasClient.TokenResponse =
-        texasClient.requestToken("tsm", "tsm-pdl-cache")
+        texasClient.requestToken("tsm", "pdl?")
+    //TODO this needs to be updated to the correct namesspace and otherApiAppName
 }
