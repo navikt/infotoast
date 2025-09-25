@@ -1,7 +1,5 @@
 package no.nav.infotoast.person.pdl
 
-import java.time.LocalDate
-import no.nav.infotoast.person.Navn
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 

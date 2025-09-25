@@ -57,6 +57,7 @@ spring:
 kafka:
   topics:
     sykmeldinger-journalpost: tsm.sykmeldinger-journalpost
+    oppgave: tsm.oppgave
 
 # spring health checks
 management:

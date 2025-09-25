@@ -29,8 +29,9 @@ class PdlClient(
 
     override fun getPerson(fnr: String): Result<PdlPerson> {
         val (accessToken) = getToken()
-        val graphqlQuery = PdlClient::class.java.getResource("/graphql/getPerson.graphql")?.readText()
-            ?: throw IllegalStateException("Could not load getPerson.graphql")
+        val graphqlQuery =
+            PdlClient::class.java.getResource("/graphql/getPerson.graphql")?.readText()
+                ?: throw IllegalStateException("Could not load getPerson.graphql")
 
         return try {
             val response =
@@ -88,7 +89,6 @@ class PdlClient(
         }
     }
 
-    private fun getToken(): TexasClient.TokenResponse =
-        texasClient.requestToken("tsm", "pdl?")
-    //TODO this needs to be updated to the correct namesspace and otherApiAppName
+    private fun getToken(): TexasClient.TokenResponse = texasClient.requestToken("tsm", "pdl?")
+    // TODO this needs to be updated to the correct namesspace and otherApiAppName
 }

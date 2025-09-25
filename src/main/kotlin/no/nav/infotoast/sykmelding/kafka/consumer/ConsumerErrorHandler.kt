@@ -1,4 +1,4 @@
-package no.nav.infotoast.sykmelding.kafka
+package no.nav.infotoast.sykmelding.kafka.consumer
 
 import no.nav.infotoast.utils.logger
 import org.apache.kafka.clients.consumer.Consumer

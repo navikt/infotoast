@@ -26,7 +26,6 @@ class MockHelsenettProxyClient : IHelsenettProxyClient {
                         )
                     ),
                 fnr = "09099012345",
-
             )
         )
     }

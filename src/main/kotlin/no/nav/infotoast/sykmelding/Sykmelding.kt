@@ -2,7 +2,8 @@ package no.nav.infotoast.sykmelding
 
 import java.time.LocalDate
 import java.time.LocalDateTime
-//TODO can we update this to a more modern version used in the other projects ?
+
+// TODO can we update this to a more modern version used in the other projects ?
 data class Sykmelding(
     val id: String,
     val msgId: String,
@@ -198,8 +199,7 @@ enum class AnnenFraverGrunn(
     ARBEIDSRETTET_TILTAK("3", "Når vedkommende deltar på et arbeidsrettet tiltak"),
     MOTTAR_TILSKUDD_GRUNNET_HELSETILSTAND(
         "4",
-        "Når vedkommende på grunn av sykdom, skade eller lyte får tilskott når vedkommende på grunn av sykdom," +
-            " skade eller lyte får tilskott",
+        "Når vedkommende på grunn av sykdom, skade eller lyte får tilskott når vedkommende på grunn av sykdom, skade eller lyte får tilskott",
     ),
     NODVENDIG_KONTROLLUNDENRSOKELSE(
         "5",

@@ -1,4 +1,4 @@
-package no.nav.infotoast.sykmelding.kafka
+package no.nav.infotoast.sykmelding.kafka.consumer
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
