@@ -12,6 +12,13 @@ class MockPdlClient : IPdlClient {
                 gt = "Geografisk tilnærming",
                 adressebeskyttelse = null,
                 sisteKontaktAdresseIUtlandet = false,
+                identer = listOf(
+                    Ident(
+                        ident = "1234567890123",
+                        gruppe = IDENT_GRUPPE.AKTORID,
+                        historisk = false
+                    )
+                )
             )
         )
     }

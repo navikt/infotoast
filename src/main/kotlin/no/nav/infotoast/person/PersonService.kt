@@ -14,20 +14,21 @@ class PersonService(
     private val logger = logger()
     private val teamLog = teamLogger()
 
-    fun getPerson(ident: String, loggingMeta: LoggingMeta): Result<Person> {
-        val person: PdlPerson =
-            pdlClient.getPerson(ident).fold({ it }) {
-                teamLog.error("Error while fetching person info for fnr=$ident", it)
+    fun getPerson(ident: String): Person =
+        pdlClient.getPerson(ident).fold(
+            onSuccess = { pdlPerson ->
+                Person(
+                    gt = pdlPerson.gt,
+                    adressebeskyttelse = pdlPerson.adressebeskyttelse,
+                    sisteKontaktAdresseIUtlandet = pdlPerson.sisteKontaktAdresseIUtlandet,
+                    identer = pdlPerson.identer,
+                )
+            },
+            onFailure = { error ->
+                teamLog.error("Error while fetching person info for fnr=$ident", error)
                 logger.error("Error while fetching person info from PDL, check secure logs")
-                return Result.failure(it)
-            }
-
-        return Result.success(
-            Person(
-                gt = person.gt,
-                adressebeskyttelse = person.adressebeskyttelse,
-                sisteKontaktAdresseIUtlandet = person.sisteKontaktAdresseIUtlandet,
-            )
+                throw error
+            },
         )
-    }
 }
+

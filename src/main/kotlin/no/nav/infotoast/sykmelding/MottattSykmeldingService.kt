@@ -2,6 +2,7 @@ package no.nav.infotoast.sykmelding
 
 import java.time.LocalDate
 import no.nav.infotoast.oppgave.OppgaveService
+import no.nav.infotoast.person.PersonService
 import no.nav.infotoast.sykmelder.tss.TssService
 import no.nav.infotoast.utils.logger
 import no.nav.infotoast.utils.teamLogger
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service
 class MottattSykmeldingService(
     private val tssService: TssService,
     private val manuellBehandlingService: OppgaveService,
+    private val personService: PersonService,
 ) {
     private val logger = logger()
     private val teamLogger = teamLogger()
@@ -40,11 +42,13 @@ class MottattSykmeldingService(
 
         // sjekk om validation result er manual processing
 
+        val pdlPerson = personService.getPerson(getSykmelderFnr(sykmeldingRecord))
+
         if (sykmeldingRecord.validation.status != RuleType.PENDING) {
             logger.info(
                 "Sykmelding med id $sykmeldingId har validation result ${sykmeldingRecord.validation.status}, denne kan ikke Infotrygd prosessere automatisk, oppretter oppgave"
             )
-            manuellBehandlingService.produceOppgave(sykmeldingRecord)
+            manuellBehandlingService.produceOppgave(sykmeldingRecord, journalpostId, pdlPerson)
         } else {
             // TODO opprett manuell oppgave - sender ikkje på infotrygd
         }

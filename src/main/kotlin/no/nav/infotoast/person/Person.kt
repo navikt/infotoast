@@ -1,9 +1,12 @@
 package no.nav.infotoast.person
 
+import no.nav.infotoast.person.pdl.Ident
+
 data class Person(
     val gt: String?,
     val adressebeskyttelse: String?,
     val sisteKontaktAdresseIUtlandet: Boolean,
+    val identer: List<Ident>,
 )
 
 fun Person.getDiskresjonskode(): String? {
