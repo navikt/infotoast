@@ -18,10 +18,6 @@ class ProducerConfig {
 
     @Bean fun oppgaveTopic(@Value("\${kafka.topics.oppgave}") oppgaveTopic: String) = oppgaveTopic
 
-    @Bean fun sourceApp(@Value("\${spring.application.name}") app: String) = app
-
-    @Bean fun sourceNamespace(@Value("\${nais.cluster:local}") namespace: String) = namespace
-
     @Bean
     fun oppgaveKafkaProducer(props: KafkaProperties): KafkaProducer<String, OppgaveRecord> {
         val producerProps = props.buildProducerProperties(null)
@@ -39,9 +35,7 @@ class ProducerConfig {
     fun oppgaveProducer(
         kafkaProducer: KafkaProducer<String, OppgaveRecord>,
         @Value("\${kafka.topics.oppgave}") topic: String,
-        @Value("\${spring.application.name}") sourceApp: String,
-        @Value("\${nais.cluster:local}") sourceNamespace: String,
-    ): OppgaveProducer = OppgaveProducer(kafkaProducer, topic, sourceApp, sourceNamespace)
+    ): OppgaveProducer = OppgaveProducer(kafkaProducer, topic)
 
     // For local/dev/test we still use the same configuration provided by Spring Boot Kafka
     @Bean
