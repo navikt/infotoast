@@ -58,3 +58,4 @@ src/main/resources/application-dev-kafka.yaml
 # Temporary files
 /syfosminfotrygd/
 /journey/
+/docs/

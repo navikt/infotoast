@@ -14,3 +14,24 @@ services:
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
 
+  ibmmq:
+    image: ibmcom/mq:latest
+    container_name: ibmmq
+    ports:
+      - "1414:1414"
+      - "9443:9443"
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+      MQ_APP_PASSWORD: passw0rd
+      MQ_ADMIN_PASSWORD: passw0rd
+    volumes:
+      - mq-data:/mnt/mqm
+    healthcheck:
+      test: ["CMD", "dspmq"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mq-data:

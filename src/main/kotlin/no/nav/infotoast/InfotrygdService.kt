@@ -1,6 +1,6 @@
 package no.nav.infotoast
 
-import no.nav.infotoast.gcp.GcpBucketService
+import no.nav.infotoast.gcp.IGcpBucketService
 import no.nav.infotoast.infotrygd.mq.InfotrygdMqService
 import no.nav.infotoast.person.Person
 import no.nav.infotoast.utils.logger
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class InfotrygdService(
     private val infotrygdMqService: InfotrygdMqService,
-    private val gcpBucketService: GcpBucketService
+    private val gcpBucketService: IGcpBucketService
 ) {
     private val logger = logger()
 

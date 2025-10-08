@@ -12,7 +12,7 @@ class GcpBucketService(
     @Value("\${gcp.bucket.name}") private val bucketName: String,
     private val storage: Storage,
     private val xmlHandler: XmlHandler,
-) {
+) : IGcpBucketService {
     private val logger = logger()
 
     /**
@@ -21,7 +21,7 @@ class GcpBucketService(
      * @param sykmeldingId the ID of the sykmelding
      * @return XMLEIFellesformat if found, null otherwise
      */
-    fun getFellesformat(sykmeldingId: String): XMLEIFellesformat? {
+    override fun getFellesformat(sykmeldingId: String): XMLEIFellesformat? {
         logger.info(
             "Attempting to download fellesformat for sykmeldingId: $sykmeldingId from bucket: $bucketName"
         )
@@ -57,7 +57,7 @@ class GcpBucketService(
     }
 
     /** Checks if a fellesformat exists in the bucket for the given sykmeldingId */
-    fun fellesformatExists(sykmeldingId: String): Boolean {
+    override fun fellesformatExists(sykmeldingId: String): Boolean {
         return try {
             val blobId = BlobId.of(bucketName, sykmeldingId)
             val blob = storage.get(blobId)
