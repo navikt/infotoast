@@ -7,6 +7,12 @@ val javaVersion = JvmTarget.JVM_21
 //runtime deps
 val logstashLogbackEncoderVersion = "8.1"
 val sykmeldingInputVersion = "13"
+val ibmMqVersion = "9.4.3.0"
+val googleCloudStorageVersion = "2.50.0"
+val syfoXmlCodegenVersion = "2.0.1"
+val jaxbRuntimeVersion = "2.4.0-b180830.0438"
+val jaxbApiVersion = "2.4.0-b180830.0359"
+val javaTimeAdapterVersion = "1.1.3"
 
 
 // dev deps
@@ -58,6 +64,15 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}")
     implementation("no.nav.tsm.sykmelding", "input", sykmeldingInputVersion)
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("com.ibm.mq:com.ibm.mq.jakarta.client:${ibmMqVersion}")
+    implementation("com.google.cloud:google-cloud-storage:${googleCloudStorageVersion}")
+    implementation("no.nav.helse.xml:sm2013:${syfoXmlCodegenVersion}")
+    implementation("no.nav.helse.xml:xmlfellesformat:${syfoXmlCodegenVersion}")
+    implementation("no.nav.helse.xml:kith-hodemelding:${syfoXmlCodegenVersion}")
+    implementation("no.nav.helse.xml:kith-apprec:${syfoXmlCodegenVersion}")
+    implementation("javax.xml.bind:jaxb-api:${jaxbApiVersion}")
+    implementation("org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}")
+    implementation("com.migesok", "jaxb-java-time-adapters", javaTimeAdapterVersion)
     //TODO add open telemetry?
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

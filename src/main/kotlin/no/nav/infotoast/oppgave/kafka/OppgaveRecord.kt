@@ -1,4 +1,4 @@
-package no.nav.infotoast.oppgave
+package no.nav.infotoast.oppgave.kafka
 
 data class OppgaveRecord(
     val produserOppgave: ProduserOppgaveKafkaMessage,
@@ -24,7 +24,6 @@ data class ProduserOppgaveKafkaMessage(
     val prioritet: PrioritetType,
     val metadata: Map<String?, String?>,
 )
-
 
 data class JournalKafkaMessage(
     val messageId: String,

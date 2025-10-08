@@ -1,6 +1,7 @@
 package no.nav.infotoast.sykmelding
 
 import java.time.LocalDate
+import no.nav.infotoast.InfotrygdService
 import no.nav.infotoast.oppgave.OppgaveService
 import no.nav.infotoast.person.PersonService
 import no.nav.infotoast.sykmelder.tss.TssService
@@ -21,6 +22,7 @@ class MottattSykmeldingService(
     private val tssService: TssService,
     private val manuellBehandlingService: OppgaveService,
     private val personService: PersonService,
+    private val infotrygdService: InfotrygdService,
 ) {
     private val logger = logger()
     private val teamLogger = teamLogger()
@@ -34,41 +36,33 @@ class MottattSykmeldingService(
         val tssId =
             tssService.getTssId(
                 fnr = getSykmelderFnr(sykmeldingRecord),
-                orgName = getOrgNameForSykmelder(sykmeldingRecord),
+                orgName = "",
                 sykmeldingId = sykmeldingId,
             )
 
         logger.info("Sykmelding med id $sykmeldingId har tssId $tssId")
 
-        // sjekk om validation result er manual processing
-
         val pdlPerson = personService.getPerson(getSykmelderFnr(sykmeldingRecord))
 
         if (sykmeldingRecord.validation.status != RuleType.PENDING) {
+            // TODO (happy path)
+            // Happy path should create a request to infotrygd and send it on the mq
+            infotrygdService.updateInfotrygd(
+                tssId = tssId,
+                sykmeldingRecord = sykmeldingRecord,
+                journalpostId = journalpostId,
+                pdlPerson = pdlPerson,
+            )
+        } else {
             logger.info(
                 "Sykmelding med id $sykmeldingId har validation result ${sykmeldingRecord.validation.status}, denne kan ikke Infotrygd prosessere automatisk, oppretter oppgave"
             )
             manuellBehandlingService.produceOppgave(sykmeldingRecord, journalpostId, pdlPerson)
-        } else {
-            // TODO opprett manuell oppgave - sender ikkje på infotrygd
         }
 
         // TODO Treng vi sjekke person og sykmelder? sjekk kva infotrygd gjer. Mulig vi også må slå
         // opp sykmelder og sende vidare til servicen.. smtss oppslaget treng.
-        // TODO må ha ein data klasse ala receivedSykmelding for å putte ting i, blant anna tss id.
-        // denne her må slå opp tssId
 
-    }
-
-    private fun getLegekontorOrgnr(sykmeldingRecord: SykmeldingRecord): String? {
-        return "123456789"
-        // TODO implement, find a way to find this information for all types of sykmelding
-    }
-
-    private fun getOrgNameForSykmelder(sykmeldingRecord: SykmeldingRecord): String {
-        return ""
-        // TODO we got to figure out what org name to use here - syk-dig-backend sends a blank
-        // string.
     }
 
     private fun getSykmelderFnr(sykmeldingRecord: SykmeldingRecord): String {

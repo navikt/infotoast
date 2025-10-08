@@ -1,4 +1,4 @@
-package no.nav.infotoast.sykmelding.kafka.producer
+package no.nav.infotoast.oppgave.kafka.producer
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature

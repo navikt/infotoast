@@ -2,7 +2,7 @@ package no.nav.infotoast.sykmelding
 
 import java.time.LocalDateTime
 
-// TODO verify if we can use this, compare to syfosminfotrygd. do we really need all of these?
+// TODO This we wont use.. just inspiration...delete after
 data class ReceivedSykmelding(
     val sykmelding: Sykmelding,
     val personNrPasient: String,

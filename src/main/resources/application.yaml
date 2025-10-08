@@ -53,6 +53,22 @@ spring:
       key-store-type: PKCS12
       key-store-password: ${kafka.credstore.password}
 
+# MQ Configuration
+mq:
+  hostname: ${MQ_HOSTNAME}
+  port: ${MQ_PORT}
+  gateway:
+    name: ${MQ_GATEWAY_NAME}
+  channel:
+    name: ${MQ_CHANNEL_NAME}
+  username: ${MQ_USERNAME}
+  password: ${MQ_PASSWORD}
+  queues:
+    infotrygd:
+      oppdatering: ${MQ_INFOTRYGD_OPPDATERING_QUEUE_NAME:QA.P_INFOTRYGD_SYKMELDING_INN}
+      svar: ${MQ_INFOTRYGD_SVAR_QUEUE_NAME:QA.P414.SYKMELDING_INN_REPLY}
+      sporring: ${MQ_INFOTRYGD_SPORRING_QUEUE_NAME:QA.P_INFOTRYGD_SYKMELDING_SPORRING}
+
 # Kafka topics that infotoast uses
 kafka:
   topics:
@@ -82,9 +98,12 @@ services:
     graphql:
       url: ${PDL_GRAPHQL_PATH}
 
+# GCP Storage
+gcp:
+  bucket:
+    name: ${TSM_SYKMELDING_BUCKET}
 
 # Config for Texas
 nais:
   token_endpoint: ${NAIS_TOKEN_ENDPOINT}
   cluster: ${NAIS_CLUSTER_NAME}
-

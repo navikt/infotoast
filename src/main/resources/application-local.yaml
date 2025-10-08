@@ -4,6 +4,24 @@ spring:
     bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:9092}
     security:
       protocol: plaintext
+  profiles:
+    active: local
+
+# MQ Configuration for local development
+mq:
+  hostname: localhost
+  port: 1414
+  gateway:
+    name: QM1
+  channel:
+    name: DEV.APP.SVRCONN
+  username: app
+  password: passw0rd
+  queues:
+    infotrygd:
+      oppdatering: QA.P_INFOTRYGD_SYKMELDING_INN
+      svar: QA.P414.SYKMELDING_INN_REPLY
+      sporring: QA.P_INFOTRYGD_SYKMELDING_SPORRING
 
 nais:
   cluster: ${NAIS_CLUSTER:local}

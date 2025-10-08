@@ -1,7 +1,8 @@
-package no.nav.infotoast.sykmelding.kafka.producer
+package no.nav.infotoast.oppgave.kafka.producer
 
-import no.nav.infotoast.oppgave.OppgaveRecord
+import no.nav.infotoast.oppgave.kafka.OppgaveRecord
 import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
@@ -22,11 +23,8 @@ class ProducerConfig {
     fun oppgaveKafkaProducer(props: KafkaProperties): KafkaProducer<String, OppgaveRecord> {
         val producerProps = props.buildProducerProperties(null)
         // Ensure serializers are correct
-        producerProps[
-            org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] =
-            StringSerializer::class.java
-        producerProps[
-            org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] =
+        producerProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+        producerProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] =
             OppgaveRecordSerializer::class.java
         return KafkaProducer(producerProps)
     }
