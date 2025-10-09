@@ -6,6 +6,17 @@ spring:
       protocol: plaintext
   profiles:
     active: local
+  # Valkey configuration
+  data:
+    redis:
+      host: ${VALKEY_HOST:localhost}
+      port: ${VALKEY_PORT:6379}
+      timeout: 10000
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
 
 # MQ Configuration for local development
 mq:
@@ -22,6 +33,11 @@ mq:
       oppdatering: QA.P_INFOTRYGD_SYKMELDING_INN
       svar: QA.P414.SYKMELDING_INN_REPLY
       sporring: QA.P_INFOTRYGD_SYKMELDING_SPORRING
+
+# External services
+services:
+  norg2:
+    url: http://localhost:8090  # Mock NORG2 will be used in local profile
 
 nais:
   cluster: ${NAIS_CLUSTER:local}

@@ -12,6 +12,20 @@ spring:
     active: default
   application:
     name: infotoast
+  # Valkey/Redis configuration for production
+  data:
+    redis:
+      host: ${VALKEY_HOST:localhost}
+      port: ${VALKEY_PORT:6379}
+      password: ${VALKEY_PASSWORD:}
+      ssl:
+        enabled: ${VALKEY_SSL_ENABLED:false}
+      timeout: 10000
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
   security:
     oauth2:
       resourceserver:
@@ -97,6 +111,8 @@ services:
   pdl:
     graphql:
       url: ${PDL_GRAPHQL_PATH}
+  norg2:
+    url: ${NORG2_URL}
 
 # GCP Storage
 gcp:

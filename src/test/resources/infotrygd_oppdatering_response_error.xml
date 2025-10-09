@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Replace this with actual Infotrygd oppdatering error response -->
+<!-- Expected format based on assumptions - needs verification -->
+<InfotrygdOppdateringResponse>
+    <Status>ERROR</Status>
+    <Error>
+        <Code>E002</Code>
+        <Message>Oppdatering feilet - ugyldig data</Message>
+    </Error>
+</InfotrygdOppdateringResponse>
+

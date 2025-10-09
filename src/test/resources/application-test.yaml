@@ -1,0 +1,39 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  kafka:
+    bootstrap-servers: localhost:9999
+  cloud:
+    gcp:
+      project-id: test-project
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# Disable MQ for tests
+ibm:
+  mq:
+    queueManager: TEST
+    channel: TEST
+    connName: localhost(1414)
+    user: test
+    password: test
+
+# Mock Azure config
+azure:
+  openid:
+    config:
+      jwks:
+        uri: http://localhost:8080/mock
+      issuer: http://localhost:8080/mock
+
+logging:
+  level:
+    root: WARN
+    no.nav.infotoast: INFO
+

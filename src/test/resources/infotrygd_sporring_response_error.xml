@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Replace this with actual Infotrygd sporring error response -->
+<!-- Error responses likely return an empty or incomplete InfotrygdForesp structure -->
+<InfotrygdForesp>
+    <!-- No tkNummer or sMhistorikk - represents an error condition -->
+</InfotrygdForesp>

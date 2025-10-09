@@ -3,8 +3,10 @@ package no.nav.infotoast.infotrygd.mq
 import jakarta.jms.Connection
 import jakarta.jms.MessageProducer
 import jakarta.jms.Session
+import java.util.UUID
 import no.nav.infotoast.mq.producerForQueue
 import no.nav.infotoast.utils.logger
+import no.nav.infotoast.utils.teamLogger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -16,54 +18,67 @@ class InfotrygdMqService(
     @Value("\${mq.queues.infotrygd.sporring}") private val infotrygdSporringQueue: String,
 ) {
     private val logger = logger()
+    private val teamLogger = teamLogger()
 
-    fun sendInfotrygdOppdatering(xmlMessage: String) {
+    /**
+     * Sends an Infotrygd query (sporring/forespørsel) to check existing data Returns the
+     * correlation ID for tracking the response
+     */
+    fun sendInfotrygdSporring(xmlMessage: String, sykmeldingId: String): String {
         val session = mqConnection.createSession(false, Session.AUTO_ACKNOWLEDGE)
         try {
+            val correlationId = UUID.randomUUID().toString()
             val producer =
-                session.producerForQueue("queue:///$infotrygdOppdateringQueue?targetClient=1")
-            val textMessage = session.createTextMessage().apply { text = xmlMessage }
+                session.producerForQueue("queue:///$infotrygdSporringQueue?targetClient=1")
+
+            val textMessage =
+                session.createTextMessage().apply {
+                    text = xmlMessage
+                    jmsCorrelationID = correlationId
+                    // TODO: Update queue name when we have the actual static reply queue name
+                    jmsReplyTo = session.createQueue(infotrygdSvarQueue)
+                }
+
             producer.send(textMessage)
             logger.info(
-                "Successfully sent Infotrygd oppdatering message to queue: $infotrygdOppdateringQueue"
+                "Sent Infotrygd sporring for sykmelding $sykmeldingId with correlationId $correlationId"
             )
+            teamLogger.info("Sent Infotrygd sporring for sykmelding $sykmeldingId")
+
+            return correlationId
         } finally {
             session.close()
         }
     }
 
-    fun sendInfotrygdSporring(xmlMessage: String): String {
+    /**
+     * Sends an Infotrygd update (oppdatering) message Returns the correlation ID for tracking the
+     * response
+     */
+    fun sendInfotrygdOppdatering(xmlMessage: String, sykmeldingId: String): String {
         val session = mqConnection.createSession(false, Session.AUTO_ACKNOWLEDGE)
         try {
+            val correlationId = UUID.randomUUID().toString()
             val producer =
-                session.producerForQueue("queue:///$infotrygdSporringQueue?targetClient=1")
-
-            // Create temporary queue for reply
-            val replyQueue = session.createTemporaryQueue()
-            val consumer = session.createConsumer(replyQueue)
+                session.producerForQueue("queue:///$infotrygdOppdateringQueue?targetClient=1")
 
             val textMessage =
                 session.createTextMessage().apply {
                     text = xmlMessage
-                    jmsReplyTo = replyQueue
+                    jmsCorrelationID = correlationId
+                    // TODO: Update queue name when we have the actual static reply queue name
+                    jmsReplyTo = session.createQueue(infotrygdSvarQueue)
                 }
 
             producer.send(textMessage)
             logger.info(
-                "Successfully sent Infotrygd sporring message to queue: $infotrygdSporringQueue"
+                "Sent Infotrygd oppdatering for sykmelding $sykmeldingId with correlationId $correlationId"
+            )
+            teamLogger.info(
+                "Sent Infotrygd oppdatering for sykmelding $sykmeldingId, message length: ${xmlMessage.length}"
             )
 
-            // Wait for response (with timeout)
-            val responseMessage = consumer.receive(30000) // 30 second timeout
-
-            if (responseMessage == null) {
-                logger.error("Timeout waiting for response from Infotrygd sporring")
-                throw RuntimeException("Timeout waiting for response from Infotrygd")
-            }
-
-            val response = (responseMessage as jakarta.jms.TextMessage).text
-            logger.info("Received response from Infotrygd sporring")
-            return response
+            return correlationId
         } finally {
             session.close()
         }

@@ -2,8 +2,10 @@ package no.nav.infotoast.sykmelding
 
 import java.time.LocalDate
 import no.nav.infotoast.InfotrygdService
+import no.nav.infotoast.norg.NavKontorService
 import no.nav.infotoast.oppgave.OppgaveService
 import no.nav.infotoast.person.PersonService
+import no.nav.infotoast.sykmelder.hpr.HprService
 import no.nav.infotoast.sykmelder.tss.TssService
 import no.nav.infotoast.utils.logger
 import no.nav.infotoast.utils.teamLogger
@@ -23,6 +25,8 @@ class MottattSykmeldingService(
     private val manuellBehandlingService: OppgaveService,
     private val personService: PersonService,
     private val infotrygdService: InfotrygdService,
+    private val hprService: HprService,
+    private val navKontorService: NavKontorService,
 ) {
     private val logger = logger()
     private val teamLogger = teamLogger()
@@ -33,25 +37,41 @@ class MottattSykmeldingService(
         journalpostId: String
     ) {
 
+        val sykmelderFnr = getSykmelderFnr(sykmeldingRecord)
+
         val tssId =
             tssService.getTssId(
-                fnr = getSykmelderFnr(sykmeldingRecord),
+                fnr = sykmelderFnr,
                 orgName = "",
                 sykmeldingId = sykmeldingId,
             )
 
         logger.info("Sykmelding med id $sykmeldingId har tssId $tssId")
 
-        val pdlPerson = personService.getPerson(getSykmelderFnr(sykmeldingRecord))
+        val pdlPerson = personService.getPerson(sykmelderFnr)
 
         if (sykmeldingRecord.validation.status != RuleType.PENDING) {
-            // TODO (happy path)
-            // Happy path should create a request to infotrygd and send it on the mq
-            infotrygdService.updateInfotrygd(
+            // Get healthcare personnel category from HPR
+            val helsepersonellKategori =
+                hprService.getHelsepersonellKategori(sykmelderFnr, sykmeldingId)
+            logger.info(
+                "Sykmelding med id $sykmeldingId har helsepersonellkategori $helsepersonellKategori"
+            )
+
+            // Get NAV office number from NORG2 (or 2101 for utenlandsk sykmeldinger)
+            val navKontorNr =
+                navKontorService.finnLokaltNavkontor(pdlPerson, sykmeldingRecord, sykmeldingId)
+            logger.info("Sykmelding med id $sykmeldingId har NAV kontor $navKontorNr")
+
+            // Initiate async Infotrygd processing (sends sporring, response listener will handle
+            // oppdatering)
+            infotrygdService.initiateInfotrygdProcessing(
                 tssId = tssId,
                 sykmeldingRecord = sykmeldingRecord,
                 journalpostId = journalpostId,
                 pdlPerson = pdlPerson,
+                helsepersonellKategori = helsepersonellKategori,
+                navKontorNr = navKontorNr,
             )
         } else {
             logger.info(
@@ -59,10 +79,6 @@ class MottattSykmeldingService(
             )
             manuellBehandlingService.produceOppgave(sykmeldingRecord, journalpostId, pdlPerson)
         }
-
-        // TODO Treng vi sjekke person og sykmelder? sjekk kva infotrygd gjer. Mulig vi også må slå
-        // opp sykmelder og sende vidare til servicen.. smtss oppslaget treng.
-
     }
 
     private fun getSykmelderFnr(sykmeldingRecord: SykmeldingRecord): String {

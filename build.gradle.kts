@@ -60,7 +60,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
     implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}")
     implementation("no.nav.tsm.sykmelding", "input", sykmeldingInputVersion)
     implementation("io.micrometer:micrometer-registry-prometheus")
@@ -78,12 +82,13 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.testcontainers:kafka:${testContainersVersion}")
+    testImplementation("org.testcontainers:junit-jupiter:${testContainersVersion}")
 }
 
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
         jvmTarget.set(javaVersion)
     }
 }
