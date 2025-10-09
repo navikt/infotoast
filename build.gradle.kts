@@ -1,6 +1,9 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 val javaVersion = JvmTarget.JVM_21
 
@@ -18,6 +21,7 @@ val javaTimeAdapterVersion = "1.1.3"
 // dev deps
 val ktfmtVersion = "0.44"
 val testContainersVersion = "1.21.3"
+val mockkVersion = "1.13.8"
 
 plugins {
     kotlin("jvm") version "2.2.0"
@@ -83,6 +87,7 @@ dependencies {
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.testcontainers:kafka:${testContainersVersion}")
     testImplementation("org.testcontainers:junit-jupiter:${testContainersVersion}")
+    testImplementation("io.mockk:mockk:${mockkVersion}")
 }
 
 
@@ -94,18 +99,33 @@ kotlin {
 }
 
 tasks {
-    bootJar {
+
+    build { dependsOn("bootJar") }
+
+    withType<BootJar> {
         archiveFileName = "app.jar"
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
-    test {
-        useJUnitPlatform()
+
+    withType<Test> {
+        useJUnitPlatform {}
         testLogging {
             events("skipped", "failed")
             showStackTraces = true
             exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
         }
+        systemProperty("spring.profiles.active", "test")
     }
+
+    register<Exec>("addPreCommitGitHookOnBuild") {
+        doFirst {
+            println("⚈ ⚈ ⚈ Running Add Pre Commit Git Hook Script on Build ⚈ ⚈ ⚈")
+        }
+        commandLine("cp", "./.scripts/pre-commit", "./.git/hooks")
+        doLast {
+            println("✅ Added Pre Commit Git Hook Script.")
+        }
+    }
+
     configure<SpotlessExtension> {
         kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
         check {

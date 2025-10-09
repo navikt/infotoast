@@ -8,7 +8,7 @@ import no.nav.infotoast.infotrygd.InfotrygdProcessingStateService
 import no.nav.infotoast.infotrygd.InfotrygdSporringBuilder
 import no.nav.infotoast.infotrygd.InfotrygdXmlBuilder
 import no.nav.infotoast.infotrygd.ProcessingStep
-import no.nav.infotoast.infotrygd.mq.InfotrygdMqService
+import no.nav.infotoast.infotrygd.mq.IInfotrygdMqService
 import no.nav.infotoast.person.Person
 import no.nav.infotoast.utils.logger
 import no.nav.infotoast.utils.teamLogger
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class InfotrygdService(
-    private val infotrygdMqService: InfotrygdMqService,
+    private val infotrygdMqService: IInfotrygdMqService,
     private val gcpBucketService: IGcpBucketService,
     private val fellesformatExtractor: FellesformatExtractorService,
     private val infotrygdBlokkBuilder: InfotrygdBlokkBuilder,

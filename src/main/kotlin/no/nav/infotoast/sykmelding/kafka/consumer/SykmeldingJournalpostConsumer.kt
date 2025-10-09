@@ -40,11 +40,15 @@ class SykmeldingJournalpostConsumer(
             val sykmeldingWithJournalpostIdRecord =
                 sykmeldingObjectMapper.readValue<SykmeldingWithJournalpostIdRecord>(value)
 
-            mottattSykmeldingService.handleMessage(
-                sykmeldingId = sykmeldingId,
-                sykmeldingRecord = sykmeldingWithJournalpostIdRecord.sykmeldingRecord,
-                journalpostId = sykmeldingWithJournalpostIdRecord.journalpostId,
+            Thread.sleep(5000)
+            println(
+                "we managed to read a sykmelding with id ${sykmeldingId} from topic and journalpostId ${sykmeldingWithJournalpostIdRecord.journalpostId}"
             )
+            //            mottattSykmeldingService.handleMessage(
+            //                sykmeldingId = sykmeldingId,
+            //                sykmeldingRecord = sykmeldingWithJournalpostIdRecord.sykmeldingRecord,
+            //                journalpostId = sykmeldingWithJournalpostIdRecord.journalpostId,
+            //            )
         } catch (e: Exception) {
             logger.error(
                 "Kafka consumer failed, key: ${record.key()} - Error processing record",

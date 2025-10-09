@@ -35,8 +35,6 @@ spec:
     requests:
       cpu: 50m
       memory: 580Mi
-  secureLogs:
-    enabled: true
   kafka:
     pool: nav-dev
 

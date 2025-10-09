@@ -1,6 +1,5 @@
 package no.nav.infotoast.sykmelding
 
-import java.time.LocalDate
 import no.nav.infotoast.InfotrygdService
 import no.nav.infotoast.norg.NavKontorService
 import no.nav.infotoast.oppgave.OppgaveService
@@ -104,7 +103,3 @@ class MottattSykmeldingService(
         return fnr
     }
 }
-
-fun List<Aktivitet>.sortedFOMDate(): List<LocalDate> = map { it.fom }.sorted()
-
-fun List<Aktivitet>.sortedTOMDate(): List<LocalDate> = map { it.tom }.sorted()

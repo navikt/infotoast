@@ -8,6 +8,7 @@ import no.nav.infotoast.mq.producerForQueue
 import no.nav.infotoast.utils.logger
 import no.nav.infotoast.utils.teamLogger
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +17,7 @@ class InfotrygdMqService(
     @Value("\${mq.queues.infotrygd.oppdatering}") private val infotrygdOppdateringQueue: String,
     @Value("\${mq.queues.infotrygd.svar}") private val infotrygdSvarQueue: String,
     @Value("\${mq.queues.infotrygd.sporring}") private val infotrygdSporringQueue: String,
-) {
+) : IInfotrygdMqService {
     private val logger = logger()
     private val teamLogger = teamLogger()
 
@@ -24,7 +25,7 @@ class InfotrygdMqService(
      * Sends an Infotrygd query (sporring/forespørsel) to check existing data Returns the
      * correlation ID for tracking the response
      */
-    fun sendInfotrygdSporring(xmlMessage: String, sykmeldingId: String): String {
+    override fun sendInfotrygdSporring(xmlMessage: String, sykmeldingId: String): String {
         val session = mqConnection.createSession(false, Session.AUTO_ACKNOWLEDGE)
         try {
             val correlationId = UUID.randomUUID().toString()
@@ -55,7 +56,7 @@ class InfotrygdMqService(
      * Sends an Infotrygd update (oppdatering) message Returns the correlation ID for tracking the
      * response
      */
-    fun sendInfotrygdOppdatering(xmlMessage: String, sykmeldingId: String): String {
+    override fun sendInfotrygdOppdatering(xmlMessage: String, sykmeldingId: String): String {
         val session = mqConnection.createSession(false, Session.AUTO_ACKNOWLEDGE)
         try {
             val correlationId = UUID.randomUUID().toString()

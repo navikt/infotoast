@@ -17,6 +17,12 @@ spring:
           max-active: 8
           max-idle: 8
           min-idle: 0
+  # Disable security for local development
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+#      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
 
 # MQ Configuration for local development
 mq:
@@ -41,3 +47,21 @@ services:
 
 nais:
   cluster: ${NAIS_CLUSTER:local}
+
+# Mock Azure AD values for local development (if security autoconfigure exclusion doesn't work)
+azure:
+  app:
+    client:
+      id: ${AZURE_APP_CLIENT_ID:local-mock-client-id}
+      secret: ${AZURE_APP_CLIENT_SECRET:local-mock-secret}
+  openid:
+    config:
+      issuer: ${AZURE_OPENID_CONFIG_ISSUER:http://localhost:8080/mock}
+      jwks:
+        uri: ${AZURE_OPENID_CONFIG_JWKS_URI:http://localhost:8080/mock/jwks}
+
+syfohelsenettproxy:
+  scope: ${SYFOHELSENETTPROXY_SCOPE:api://local-mock/.default}
+
+tsmpdl:
+  scope: ${TSMPDL_SCOPE:api://local-mock/.default}
