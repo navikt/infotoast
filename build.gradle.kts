@@ -7,10 +7,10 @@ val javaVersion = JvmTarget.JVM_21
 //runtime deps
 val logstashLogbackEncoderVersion = "8.1"
 val sykmeldingInputVersion = "13"
-val ibmMqVersion = "9.4.3.0"
-val googleCloudStorageVersion = "2.50.0"
+val ibmMqVersion = "9.4.3.1"
+val googleCloudStorageVersion = "2.58.1"
 val syfoXmlCodegenVersion = "2.0.1"
-val jaxbRuntimeVersion = "2.4.0-b180830.0438"
+val jaxbRuntimeVersion = "4.0.6"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaTimeAdapterVersion = "1.1.3"
 
@@ -20,14 +20,14 @@ val ktfmtVersion = "0.44"
 val testContainersVersion = "1.21.3"
 
 plugins {
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
-    id("org.springframework.boot") version "3.5.4"
+    kotlin("jvm") version "2.2.20"
+    kotlin("plugin.spring") version "2.2.20"
+    id("org.springframework.boot") version "3.5.6"
 
     //other plugins
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "7.2.1"
-    id("com.github.ben-manes.versions") version "0.52.0"
+    id("com.diffplug.spotless") version "8.0.0"
+    id("com.github.ben-manes.versions") version "0.53.0"
 }
 
 kotlin {
