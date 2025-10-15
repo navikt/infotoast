@@ -1,6 +1,6 @@
-package no.nav.infotoast.oppgave.kafka.producer
+package no.nav.infotoast.sykmelding.kafka.producer
 
-import no.nav.infotoast.oppgave.kafka.OppgaveRecord
+import no.nav.infotoast.oppgave.OppgaveRecord
 import no.nav.infotoast.utils.logger
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -31,6 +31,14 @@ class OppgaveProducer(
                 .messageId // TODO er dette rett id å bruke? skulle egentlig ha oppgaveId
         val producerRecord: ProducerRecord<String, OppgaveRecord> =
             ProducerRecord(oppgaveTopic, key, oppgaveRecord)
+        kafkaProducer.send(producerRecord).get()
+    }
+
+    // TODO check if we can delete
+    fun tombstoneOppgave(oppgaveId: String) {
+        logger.info("Tombstoner oppgave med id: $oppgaveId på topic $oppgaveTopic")
+        val producerRecord: ProducerRecord<String, OppgaveRecord> =
+            ProducerRecord(oppgaveTopic, oppgaveId, null)
         kafkaProducer.send(producerRecord).get()
     }
 }

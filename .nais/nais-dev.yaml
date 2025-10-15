@@ -37,7 +37,10 @@ spec:
       memory: 580Mi
   kafka:
     pool: nav-dev
-
+  azure:
+    application:
+      enabled: true
+      tenant: trygdeetaten.no
   accessPolicy:
     inbound:
       rules:

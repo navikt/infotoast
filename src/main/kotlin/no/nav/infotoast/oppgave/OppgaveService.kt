@@ -3,13 +3,9 @@ package no.nav.infotoast.oppgave
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import no.nav.infotoast.oppgave.kafka.JournalKafkaMessage
-import no.nav.infotoast.oppgave.kafka.OppgaveRecord
-import no.nav.infotoast.oppgave.kafka.PrioritetType
-import no.nav.infotoast.oppgave.kafka.ProduserOppgaveKafkaMessage
-import no.nav.infotoast.oppgave.kafka.producer.OppgaveProducer
 import no.nav.infotoast.person.Person
 import no.nav.infotoast.person.pdl.IDENT_GRUPPE
+import no.nav.infotoast.sykmelding.kafka.producer.OppgaveProducer
 import no.nav.infotoast.utils.logger
 import no.nav.tsm.sykmelding.input.core.model.Behandler
 import no.nav.tsm.sykmelding.input.core.model.DigitalSykmelding
@@ -26,13 +22,13 @@ class OppgaveService(
     private val logger = logger()
 
     fun produceOppgave(sykmeldingRecord: SykmeldingRecord, journalpostId: String, person: Person) {
-        val oppgaveRecord = mapOppgaveRecord(sykmeldingRecord, journalpostId, person)
+        val oppgaveRecord = getOppgaveRecord(sykmeldingRecord, journalpostId, person)
 
         oppgaveProducer.opprettOppgave(oppgaveRecord)
         logger.info("Opprettet oppgave for sykmeldingId ${sykmeldingRecord.sykmelding.id}")
     }
 
-    private fun mapOppgaveRecord(
+    private fun getOppgaveRecord(
         sykmeldingRecord: SykmeldingRecord,
         journalpostId: String,
         person: Person

@@ -52,10 +52,10 @@ secure.log
 # Used for local development
 src/main/resources/application-dev-kafka.yaml
 
-# Mac
+# mac
 .DS_Store
 
 # Temporary files
 /syfosminfotrygd/
-/journey/
-/docs/
+/journey
+/docs

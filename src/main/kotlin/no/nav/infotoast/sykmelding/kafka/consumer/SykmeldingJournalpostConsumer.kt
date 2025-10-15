@@ -10,6 +10,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import kotlin.math.log
 
 @Component
 class SykmeldingJournalpostConsumer(
@@ -40,15 +41,14 @@ class SykmeldingJournalpostConsumer(
             val sykmeldingWithJournalpostIdRecord =
                 sykmeldingObjectMapper.readValue<SykmeldingWithJournalpostIdRecord>(value)
 
-            Thread.sleep(5000)
-            println(
-                "we managed to read a sykmelding with id ${sykmeldingId} from topic and journalpostId ${sykmeldingWithJournalpostIdRecord.journalpostId}"
+            logger.info(
+                "[$clusterName] Mottatt sykmelding med id $sykmeldingId og journalpostId ${sykmeldingWithJournalpostIdRecord.journalpostId}",
             )
-            //            mottattSykmeldingService.handleMessage(
-            //                sykmeldingId = sykmeldingId,
-            //                sykmeldingRecord = sykmeldingWithJournalpostIdRecord.sykmeldingRecord,
-            //                journalpostId = sykmeldingWithJournalpostIdRecord.journalpostId,
-            //            )
+//            mottattSykmeldingService.handleMessage(
+//                sykmeldingId = sykmeldingId,
+//                sykmeldingRecord = sykmeldingWithJournalpostIdRecord.sykmeldingRecord,
+//                journalpostId = sykmeldingWithJournalpostIdRecord.journalpostId,
+//            )
         } catch (e: Exception) {
             logger.error(
                 "Kafka consumer failed, key: ${record.key()} - Error processing record",
