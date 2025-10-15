@@ -70,3 +70,5 @@ spec:
       value: http://smtss
     - name: SMTSS_CLIENT_ID
       value: dev-gcp.teamsykmelding.smtss
+    - name: PDL_GRAPHQL_PATH
+      value: http://tsm-pdl-cache/graphql
