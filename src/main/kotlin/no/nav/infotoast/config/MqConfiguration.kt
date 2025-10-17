@@ -1,14 +1,17 @@
-package no.nav.infotoast.mq
+package no.nav.infotoast.config
 
 import jakarta.jms.Connection
+import no.nav.infotoast.mq.MqConfig
+import no.nav.infotoast.mq.MqTlsUtils
+import no.nav.infotoast.mq.connectionFactory
 import no.nav.infotoast.utils.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
-@Profile("!local & !test")
-@Configuration
+//@Profile("!local & !test")
+//@Configuration
 class MqConfiguration(
     @Value("\${mq.hostname}") private val mqHostname: String,
     @Value("\${mq.port}") private val mqPort: Int,
@@ -31,7 +34,7 @@ class MqConfiguration(
     @Bean
     fun mqConnection(mqConfig: MqConfig): Connection {
         // Set up TLS configuration
-        MqTlsUtils.getMqTlsConfig().forEach { key, value ->
+        MqTlsUtils.Companion.getMqTlsConfig().forEach { key, value ->
             System.setProperty(key as String, value as String)
         }
 

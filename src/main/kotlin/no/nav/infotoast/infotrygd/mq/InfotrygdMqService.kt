@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
-@Service
+//@Service
 class InfotrygdMqService(
     private val mqConnection: Connection,
     @Value("\${mq.queues.infotrygd.oppdatering}") private val infotrygdOppdateringQueue: String,
