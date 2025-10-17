@@ -1,22 +1,22 @@
 package no.nav.infotoast
 //
-//import no.nav.infotoast.fellesformat.FellesformatExtractorService
-//import no.nav.infotoast.gcp.IGcpBucketService
-//import no.nav.infotoast.infotrygd.InfotrygdBlokkBuilder
-//import no.nav.infotoast.infotrygd.InfotrygdProcessingState
-//import no.nav.infotoast.infotrygd.InfotrygdProcessingStateService
-//import no.nav.infotoast.infotrygd.InfotrygdSporringBuilder
-//import no.nav.infotoast.infotrygd.InfotrygdXmlBuilder
-//import no.nav.infotoast.infotrygd.ProcessingStep
-//import no.nav.infotoast.infotrygd.mq.IInfotrygdMqService
-//import no.nav.infotoast.person.Person
-//import no.nav.infotoast.utils.logger
-//import no.nav.infotoast.utils.teamLogger
-//import no.nav.tsm.sykmelding.input.core.model.SykmeldingRecord
-//import org.springframework.stereotype.Service
+// import no.nav.infotoast.fellesformat.FellesformatExtractorService
+// import no.nav.infotoast.gcp.IGcpBucketService
+// import no.nav.infotoast.infotrygd.InfotrygdBlokkBuilder
+// import no.nav.infotoast.infotrygd.InfotrygdProcessingState
+// import no.nav.infotoast.infotrygd.InfotrygdProcessingStateService
+// import no.nav.infotoast.infotrygd.InfotrygdSporringBuilder
+// import no.nav.infotoast.infotrygd.InfotrygdXmlBuilder
+// import no.nav.infotoast.infotrygd.ProcessingStep
+// import no.nav.infotoast.infotrygd.mq.IInfotrygdMqService
+// import no.nav.infotoast.person.Person
+// import no.nav.infotoast.utils.logger
+// import no.nav.infotoast.utils.teamLogger
+// import no.nav.tsm.sykmelding.input.core.model.SykmeldingRecord
+// import org.springframework.stereotype.Service
 //
-////@Service
-//class InfotrygdService(
+//// @Service
+// class InfotrygdService(
 //    private val infotrygdMqService: IInfotrygdMqService,
 //    private val gcpBucketService: IGcpBucketService,
 //    private val fellesformatExtractor: FellesformatExtractorService,
@@ -24,7 +24,7 @@ package no.nav.infotoast
 //    private val infotrygdXmlBuilder: InfotrygdXmlBuilder,
 //    private val infotrygdSporringBuilder: InfotrygdSporringBuilder,
 //    private val processingStateService: InfotrygdProcessingStateService,
-//) {
+// ) {
 //    private val logger = logger()
 //    private val teamLogger = teamLogger()
 //
@@ -49,17 +49,20 @@ package no.nav.infotoast
 //
 //            if (fellesformat == null) {
 //                logger.error("Could not retrieve fellesformat for sykmeldingId $sykmeldingId")
-//                throw IllegalStateException("Fellesformat not found for sykmeldingId $sykmeldingId")
+//                throw IllegalStateException("Fellesformat not found for sykmeldingId
+// $sykmeldingId")
 //            }
 //
 //            // Extract all health information from fellesformat
 //            val healthInfo = fellesformatExtractor.extractHealthInfo(fellesformat)
 //            logger.info(
-//                "Extracted health info for sykmelding $sykmeldingId: hovedDiagnose=${healthInfo.hovedDiagnose?.kode}, perioder=${healthInfo.perioder.size}"
+//                "Extracted health info for sykmelding $sykmeldingId:
+// hovedDiagnose=${healthInfo.hovedDiagnose?.kode}, perioder=${healthInfo.perioder.size}"
 //            )
 //
 //            val behandlerFnr =
-//                healthInfo.behandlerFnr ?: throw IllegalStateException("Behandler FNR is required")
+//                healthInfo.behandlerFnr ?: throw IllegalStateException("Behandler FNR is
+// required")
 //
 //            // Create initial processing state in Valkey
 //            val initialState =
@@ -105,24 +108,29 @@ package no.nav.infotoast
 //            )
 //
 //            logger.info(
-//                "Sent Infotrygd sporring for sykmelding $sykmeldingId with correlationId $sporringCorrelationId. Async response will trigger oppdatering."
+//                "Sent Infotrygd sporring for sykmelding $sykmeldingId with correlationId
+// $sporringCorrelationId. Async response will trigger oppdatering."
 //            )
 //        } catch (e: Exception) {
-//            logger.error("Failed to initiate Infotrygd processing for sykmelding $sykmeldingId", e)
+//            logger.error("Failed to initiate Infotrygd processing for sykmelding $sykmeldingId",
+// e)
 //            processingStateService.markFailed(sykmeldingId, e.message ?: "Unknown error")
 //            throw e
 //        }
 //    }
 //
 //    /**
-//     * Sends oppdatering to Infotrygd (called by response listener after sporring response) This is
+//     * Sends oppdatering to Infotrygd (called by response listener after sporring response) This
+// is
 //     * the second step in the async flow
 //     *
-//     * NOTE: Oppdatering is FIRE-AND-FORGET. We send it and immediately mark as completed. We do NOT
+//     * NOTE: Oppdatering is FIRE-AND-FORGET. We send it and immediately mark as completed. We do
+// NOT
 //     * wait for or handle any response from this message.
 //     */
 //    fun sendInfotrygdOppdatering(sykmeldingId: String) {
-//        logger.info("Sending Infotrygd oppdatering for sykmelding $sykmeldingId (fire-and-forget)")
+//        logger.info("Sending Infotrygd oppdatering for sykmelding $sykmeldingId
+// (fire-and-forget)")
 //
 //        try {
 //            val state =
@@ -133,7 +141,8 @@ package no.nav.infotoast
 //
 //            if (state.currentStep != ProcessingStep.SPORRING_RECEIVED) {
 //                logger.error(
-//                    "Invalid state for oppdatering: sykmelding $sykmeldingId is in step ${state.currentStep}, expected SPORRING_RECEIVED"
+//                    "Invalid state for oppdatering: sykmelding $sykmeldingId is in step
+// ${state.currentStep}, expected SPORRING_RECEIVED"
 //                )
 //                throw IllegalStateException("Invalid processing step for oppdatering")
 //            }
@@ -165,7 +174,8 @@ package no.nav.infotoast
 //            // Generate XML message for oppdatering
 //            val oppdateringXml = infotrygdXmlBuilder.buildXmlMessage(infotrygdBlokk)
 //            logger.info(
-//                "Generated XML message for sykmelding $sykmeldingId, length=${oppdateringXml.length}"
+//                "Generated XML message for sykmelding $sykmeldingId,
+// length=${oppdateringXml.length}"
 //            )
 //
 //            // Update state to OPPDATERING_SENT (no correlation ID needed since we don't expect a
@@ -182,7 +192,8 @@ package no.nav.infotoast
 //            processingStateService.updateStep(sykmeldingId, ProcessingStep.COMPLETED)
 //
 //            logger.info(
-//                "Sent Infotrygd oppdatering for sykmelding $sykmeldingId and marked as COMPLETED (fire-and-forget)"
+//                "Sent Infotrygd oppdatering for sykmelding $sykmeldingId and marked as COMPLETED
+// (fire-and-forget)"
 //            )
 //        } catch (e: Exception) {
 //            logger.error("Failed to send Infotrygd oppdatering for sykmelding $sykmeldingId", e)
@@ -238,7 +249,8 @@ package no.nav.infotoast
 //            )
 //
 //            logger.info(
-//                "Retry: Sent sporring for sykmelding $sykmeldingId with correlationId $sporringCorrelationId"
+//                "Retry: Sent sporring for sykmelding $sykmeldingId with correlationId
+// $sporringCorrelationId"
 //            )
 //        } catch (e: Exception) {
 //            logger.error("Failed to retry sporring for sykmelding $sykmeldingId", e)
@@ -246,4 +258,4 @@ package no.nav.infotoast
 //            throw e
 //        }
 //    }
-//}
+// }

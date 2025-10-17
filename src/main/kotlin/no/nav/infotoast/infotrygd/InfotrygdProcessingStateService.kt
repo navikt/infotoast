@@ -1,13 +1,13 @@
 package no.nav.infotoast.infotrygd
 //
-//import java.time.Duration
-//import java.time.LocalDateTime
-//import no.nav.infotoast.utils.logger
-//import org.springframework.data.redis.core.RedisTemplate
-//import org.springframework.stereotype.Service
+// import java.time.Duration
+// import java.time.LocalDateTime
+// import no.nav.infotoast.utils.logger
+// import org.springframework.data.redis.core.RedisTemplate
+// import org.springframework.stereotype.Service
 //
-////@Service
-//class InfotrygdProcessingStateService(private val redisTemplate: RedisTemplate<String, Any>) {
+//// @Service
+// class InfotrygdProcessingStateService(private val redisTemplate: RedisTemplate<String, Any>) {
 //    private val logger = logger()
 //
 //    companion object {
@@ -22,7 +22,8 @@ package no.nav.infotoast.infotrygd
 //        val key = buildKey(state.sykmeldingId)
 //        redisTemplate.opsForValue().set(key, state, TTL)
 //        logger.info(
-//            "Saved processing state for sykmelding ${state.sykmeldingId}, step: ${state.currentStep}"
+//            "Saved processing state for sykmelding ${state.sykmeldingId}, step:
+// ${state.currentStep}"
 //        )
 //    }
 //
@@ -38,7 +39,8 @@ package no.nav.infotoast.infotrygd
 //            getState(sykmeldingId)
 //                ?: run {
 //                    logger.error(
-//                        "Cannot update step: Processing state not found for sykmelding $sykmeldingId"
+//                        "Cannot update step: Processing state not found for sykmelding
+// $sykmeldingId"
 //                    )
 //                    return
 //                }
@@ -72,17 +74,20 @@ package no.nav.infotoast.infotrygd
 //            getState(sykmeldingId)
 //                ?: run {
 //                    logger.error(
-//                        "Cannot update sporring response: Processing state not found for sykmelding $sykmeldingId"
+//                        "Cannot update sporring response: Processing state not found for
+// sykmelding $sykmeldingId"
 //                    )
 //                    return
 //                }
 //
 //        val updatedState =
-//            state.copy(identDato = identDato, tkNummer = tkNummer, updatedAt = LocalDateTime.now())
+//            state.copy(identDato = identDato, tkNummer = tkNummer, updatedAt =
+// LocalDateTime.now())
 //
 //        saveState(updatedState)
 //        logger.info(
-//            "Updated sykmelding $sykmeldingId with sporring response data: identDato=$identDato, tkNummer=$tkNummer"
+//            "Updated sykmelding $sykmeldingId with sporring response data: identDato=$identDato,
+// tkNummer=$tkNummer"
 //        )
 //    }
 //
@@ -92,7 +97,8 @@ package no.nav.infotoast.infotrygd
 //            getState(sykmeldingId)
 //                ?: run {
 //                    logger.error(
-//                        "Cannot mark failed: Processing state not found for sykmelding $sykmeldingId"
+//                        "Cannot mark failed: Processing state not found for sykmelding
+// $sykmeldingId"
 //                    )
 //                    return
 //                }
@@ -160,12 +166,14 @@ package no.nav.infotoast.infotrygd
 //
 //        saveState(updatedState)
 //        logger.info(
-//            "Marked sykmelding $sykmeldingId for retry ${updatedState.retryCount}/$MAX_RETRY_COUNT, step: $retryStep"
+//            "Marked sykmelding $sykmeldingId for retry
+// ${updatedState.retryCount}/$MAX_RETRY_COUNT, step: $retryStep"
 //        )
 //        return true
 //    }
 //
 //    private fun buildKey(sykmeldingId: String) = "$KEY_PREFIX$sykmeldingId"
 //
-//    private fun buildCorrelationKey(correlationId: String) = "$CORRELATION_KEY_PREFIX$correlationId"
-//}
+//    private fun buildCorrelationKey(correlationId: String) =
+// "$CORRELATION_KEY_PREFIX$correlationId"
+// }

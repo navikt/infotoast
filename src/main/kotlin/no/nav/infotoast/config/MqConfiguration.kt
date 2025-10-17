@@ -4,11 +4,9 @@ import jakarta.jms.Connection
 import no.nav.infotoast.utils.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 
-//@Profile("!local & !test")
-//@Configuration
+// @Profile("!local & !test")
+// @Configuration
 class MqConfiguration(
     @Value("\${mq.hostname}") private val mqHostname: String,
     @Value("\${mq.port}") private val mqPort: Int,

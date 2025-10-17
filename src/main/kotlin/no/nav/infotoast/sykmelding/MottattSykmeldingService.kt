@@ -17,7 +17,7 @@ class MottattSykmeldingService(
     private val tssService: TssService,
     private val manuellBehandlingService: OppgaveService,
     private val personService: PersonService,
-//    private val infotrygdService: InfotrygdService,
+    //    private val infotrygdService: InfotrygdService,
     private val hprService: HprService,
     private val navKontorService: NavKontorService,
 ) {
@@ -58,15 +58,15 @@ class MottattSykmeldingService(
 
             // Initiate async Infotrygd processing (sends sporring, response listener will handle
             // oppdatering)
-            //TODO comment back in when testing infotrygd
-//            infotrygdService.initiateInfotrygdProcessing(
-//                tssId = tssId,
-//                sykmeldingRecord = sykmeldingRecord,
-//                journalpostId = journalpostId,
-//                pdlPerson = pdlPerson,
-//                helsepersonellKategori = helsepersonellKategori,
-//                navKontorNr = navKontorNr,
-//            )
+            // TODO comment back in when testing infotrygd
+            //            infotrygdService.initiateInfotrygdProcessing(
+            //                tssId = tssId,
+            //                sykmeldingRecord = sykmeldingRecord,
+            //                journalpostId = journalpostId,
+            //                pdlPerson = pdlPerson,
+            //                helsepersonellKategori = helsepersonellKategori,
+            //                navKontorNr = navKontorNr,
+            //            )
         } else {
             logger.info(
                 "Sykmelding med id $sykmeldingId har validation result ${sykmeldingRecord.validation.status}, denne kan ikke Infotrygd prosessere automatisk, oppretter oppgave"
