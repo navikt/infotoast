@@ -59,9 +59,7 @@ class KafkaConfig(
     private fun securityConfig(): Map<String, Any> {
         // Only apply SSL config if security protocol is SSL
         if (kafkaSecurityProtocol.uppercase() != "SSL") {
-            return mapOf(
-                CommonClientConfigs.SECURITY_PROTOCOL_CONFIG to kafkaSecurityProtocol
-            )
+            return mapOf(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG to kafkaSecurityProtocol)
         }
 
         return mapOf(

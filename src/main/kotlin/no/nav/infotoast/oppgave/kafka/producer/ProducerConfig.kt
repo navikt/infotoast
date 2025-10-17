@@ -1,6 +1,6 @@
-package no.nav.infotoast.sykmelding.kafka.producer
+package no.nav.infotoast.oppgave.kafka.producer
 
-import no.nav.infotoast.oppgave.OppgaveRecord
+import no.nav.infotoast.oppgave.kafka.OppgaveRecord
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
@@ -18,8 +18,10 @@ class ProducerConfig {
     fun oppgaveKafkaProducer(props: KafkaProperties): KafkaProducer<String, OppgaveRecord> {
         val producerProps = props.buildProducerProperties(null).toMutableMap()
 
-        producerProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java.name
-        producerProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = OppgaveRecordSerializer::class.java.name
+        producerProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] =
+            StringSerializer::class.java.name
+        producerProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] =
+            OppgaveRecordSerializer::class.java.name
 
         return KafkaProducer(producerProps)
     }

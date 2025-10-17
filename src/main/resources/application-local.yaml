@@ -4,6 +4,8 @@ spring:
       - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
   # Kafka container
   kafka:
     bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:9092}
@@ -24,3 +26,26 @@ services:
   pdl:
     graphql:
       url: http://localhost:8083
+  norg2:
+    url: http://localhost:8084
+
+# GCP Storage for local
+gcp:
+  bucket:
+    name: local-bucket
+
+# MQ Configuration for local development
+mq:
+  hostname: localhost
+  port: 1414
+  gateway:
+    name: QM1
+  channel:
+    name: DEV.APP.SVRCONN
+  username: app
+  password: passw0rd
+  queues:
+    infotrygd:
+      oppdatering: QA.P_INFOTRYGD_SYKMELDING_INN
+      svar: QA.P414.SYKMELDING_INN_REPLY
+      sporring: QA.P_INFOTRYGD_SYKMELDING_SPORRING
