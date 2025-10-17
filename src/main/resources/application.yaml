@@ -87,7 +87,7 @@ mq:
 kafka:
   topics:
     sykmeldinger-journalpost: tsm.sykmeldinger-journalpost
-    oppgave: tsm.oppgave
+    oppgave: teamsykmelding.privat-registrer-oppgave
 
 # spring health checks
 management:
