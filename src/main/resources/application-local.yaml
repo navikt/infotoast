@@ -1,28 +1,38 @@
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
   # Kafka container
   kafka:
     bootstrap-servers: ${BOOTSTRAP_SERVERS:localhost:9092}
     security:
       protocol: plaintext
-  profiles:
-    active: local
-  # Valkey configuration
-  data:
-    redis:
-      host: ${VALKEY_HOST:localhost}
-      port: ${VALKEY_PORT:6379}
-      timeout: 10000
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 0
-  # Disable security for local development
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
-#      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+
+nais:
+  cluster: ${NAIS_CLUSTER:local}
+  token_endpoint: http://localhost:8080/token
+
+# External services - mock values for local development
+services:
+  teamsykmelding:
+    syfohelsenettproxy:
+      url: http://localhost:8081
+    smtss:
+      url: http://localhost:8082
+  pdl:
+    graphql:
+      url: http://localhost:8083
+  norg2:
+    url: http://localhost:8084
+
+# GCP Storage for local
+gcp:
+  bucket:
+    name: local-bucket
 
 # MQ Configuration for local development
 mq:
@@ -39,29 +49,3 @@ mq:
       oppdatering: QA.P_INFOTRYGD_SYKMELDING_INN
       svar: QA.P414.SYKMELDING_INN_REPLY
       sporring: QA.P_INFOTRYGD_SYKMELDING_SPORRING
-
-# External services
-services:
-  norg2:
-    url: http://localhost:8090  # Mock NORG2 will be used in local profile
-
-nais:
-  cluster: ${NAIS_CLUSTER:local}
-
-# Mock Azure AD values for local development (if security autoconfigure exclusion doesn't work)
-azure:
-  app:
-    client:
-      id: ${AZURE_APP_CLIENT_ID:local-mock-client-id}
-      secret: ${AZURE_APP_CLIENT_SECRET:local-mock-secret}
-  openid:
-    config:
-      issuer: ${AZURE_OPENID_CONFIG_ISSUER:http://localhost:8080/mock}
-      jwks:
-        uri: ${AZURE_OPENID_CONFIG_JWKS_URI:http://localhost:8080/mock/jwks}
-
-syfohelsenettproxy:
-  scope: ${SYFOHELSENETTPROXY_SCOPE:api://local-mock/.default}
-
-tsmpdl:
-  scope: ${TSMPDL_SCOPE:api://local-mock/.default}

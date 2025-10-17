@@ -11,17 +11,19 @@ import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 
 @Configuration
+@EnableKafka
 @EnableConfigurationProperties
 class KafkaConfig(
-    @Value("\${KAFKA_BROKERS}") private val kafkaBrokers: String,
-    @Value("\${KAFKA_SECURITY_PROTOCOL:SSL}") private val kafkaSecurityProtocol: String,
-    @Value("\${KAFKA_TRUSTSTORE_PATH}") private val kafkaTruststorePath: String,
-    @Value("\${KAFKA_CREDSTORE_PASSWORD}") private val kafkaCredstorePassword: String,
-    @Value("\${KAFKA_KEYSTORE_PATH}") private val kafkaKeystorePath: String,
+    @Value("\${spring.kafka.bootstrap-servers}") private val kafkaBrokers: String,
+    @Value("\${spring.kafka.security.protocol:SSL}") private val kafkaSecurityProtocol: String,
+    @Value("\${spring.kafka.ssl.trust-store-location:}") private val kafkaTruststorePath: String,
+    @Value("\${spring.kafka.ssl.trust-store-password:}") private val kafkaCredstorePassword: String,
+    @Value("\${spring.kafka.ssl.key-store-location:}") private val kafkaKeystorePath: String,
 ) {
 
     private val javaKeystore = "JKS"
@@ -54,8 +56,13 @@ class KafkaConfig(
             BOOTSTRAP_SERVERS_CONFIG to kafkaBrokers,
         ) + securityConfig()
 
-    private fun securityConfig() =
-        mapOf(
+    private fun securityConfig(): Map<String, Any> {
+        // Only apply SSL config if security protocol is SSL
+        if (kafkaSecurityProtocol.uppercase() != "SSL") {
+            return mapOf(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG to kafkaSecurityProtocol)
+        }
+
+        return mapOf(
             CommonClientConfigs.SECURITY_PROTOCOL_CONFIG to kafkaSecurityProtocol,
             SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG to "",
             // Disable server host name verification
@@ -67,4 +74,5 @@ class KafkaConfig(
             SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG to kafkaCredstorePassword,
             SslConfigs.SSL_KEY_PASSWORD_CONFIG to kafkaCredstorePassword,
         )
+    }
 }

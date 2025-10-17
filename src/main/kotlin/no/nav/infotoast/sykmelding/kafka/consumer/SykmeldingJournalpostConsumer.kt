@@ -40,9 +40,8 @@ class SykmeldingJournalpostConsumer(
             val sykmeldingWithJournalpostIdRecord =
                 sykmeldingObjectMapper.readValue<SykmeldingWithJournalpostIdRecord>(value)
 
-            Thread.sleep(5000)
-            println(
-                "we managed to read a sykmelding with id ${sykmeldingId} from topic and journalpostId ${sykmeldingWithJournalpostIdRecord.journalpostId}"
+            logger.info(
+                "[$clusterName] Mottatt sykmelding med id $sykmeldingId og journalpostId ${sykmeldingWithJournalpostIdRecord.journalpostId}",
             )
             //            mottattSykmeldingService.handleMessage(
             //                sykmeldingId = sykmeldingId,

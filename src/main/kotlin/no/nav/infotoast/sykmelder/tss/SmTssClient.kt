@@ -19,7 +19,7 @@ interface ISmTssClient {
 class SmTssClient(
     restClientBuilder: RestClient.Builder,
     private val texasClient: TexasClient,
-    @param:Value($$"${services.teamsykmelding.tss.url}") private val baseUrl: String,
+    @param:Value($$"${services.teamsykmelding.smtss.url}") private val baseUrl: String,
 ) : ISmTssClient {
 
     private val restClient: RestClient = restClientBuilder.baseUrl(baseUrl).build()

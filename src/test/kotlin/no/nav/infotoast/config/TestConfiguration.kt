@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 
-@TestConfiguration
+//@TestConfiguration
 class ValkeyTestConfiguration {
 
     @Bean

@@ -1,6 +1,5 @@
 package no.nav.infotoast.sykmelding
 
-import no.nav.infotoast.InfotrygdService
 import no.nav.infotoast.norg.NavKontorService
 import no.nav.infotoast.oppgave.OppgaveService
 import no.nav.infotoast.person.PersonService
@@ -8,13 +7,8 @@ import no.nav.infotoast.sykmelder.hpr.HprService
 import no.nav.infotoast.sykmelder.tss.TssService
 import no.nav.infotoast.utils.logger
 import no.nav.infotoast.utils.teamLogger
+import no.nav.tsm.sykmelding.input.core.model.*
 import no.nav.tsm.sykmelding.input.core.model.Behandler
-import no.nav.tsm.sykmelding.input.core.model.DigitalSykmelding
-import no.nav.tsm.sykmelding.input.core.model.Papirsykmelding
-import no.nav.tsm.sykmelding.input.core.model.RuleType
-import no.nav.tsm.sykmelding.input.core.model.SykmeldingRecord
-import no.nav.tsm.sykmelding.input.core.model.UtenlandskSykmelding
-import no.nav.tsm.sykmelding.input.core.model.XmlSykmelding
 import no.nav.tsm.sykmelding.input.core.model.metadata.PersonIdType
 import org.springframework.stereotype.Service
 
@@ -23,7 +17,7 @@ class MottattSykmeldingService(
     private val tssService: TssService,
     private val manuellBehandlingService: OppgaveService,
     private val personService: PersonService,
-    private val infotrygdService: InfotrygdService,
+//    private val infotrygdService: InfotrygdService,
     private val hprService: HprService,
     private val navKontorService: NavKontorService,
 ) {
@@ -64,14 +58,15 @@ class MottattSykmeldingService(
 
             // Initiate async Infotrygd processing (sends sporring, response listener will handle
             // oppdatering)
-            infotrygdService.initiateInfotrygdProcessing(
-                tssId = tssId,
-                sykmeldingRecord = sykmeldingRecord,
-                journalpostId = journalpostId,
-                pdlPerson = pdlPerson,
-                helsepersonellKategori = helsepersonellKategori,
-                navKontorNr = navKontorNr,
-            )
+            //TODO comment back in when testing infotrygd
+//            infotrygdService.initiateInfotrygdProcessing(
+//                tssId = tssId,
+//                sykmeldingRecord = sykmeldingRecord,
+//                journalpostId = journalpostId,
+//                pdlPerson = pdlPerson,
+//                helsepersonellKategori = helsepersonellKategori,
+//                navKontorNr = navKontorNr,
+//            )
         } else {
             logger.info(
                 "Sykmelding med id $sykmeldingId har validation result ${sykmeldingRecord.validation.status}, denne kan ikke Infotrygd prosessere automatisk, oppretter oppgave"

@@ -33,4 +33,12 @@ class OppgaveProducer(
             ProducerRecord(oppgaveTopic, key, oppgaveRecord)
         kafkaProducer.send(producerRecord).get()
     }
+
+    // TODO check if we can delete
+    fun tombstoneOppgave(oppgaveId: String) {
+        logger.info("Tombstoner oppgave med id: $oppgaveId på topic $oppgaveTopic")
+        val producerRecord: ProducerRecord<String, OppgaveRecord> =
+            ProducerRecord(oppgaveTopic, oppgaveId, null)
+        kafkaProducer.send(producerRecord).get()
+    }
 }

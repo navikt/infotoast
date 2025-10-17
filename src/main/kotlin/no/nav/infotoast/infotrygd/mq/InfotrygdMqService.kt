@@ -8,7 +8,6 @@ import no.nav.infotoast.mq.producerForQueue
 import no.nav.infotoast.utils.logger
 import no.nav.infotoast.utils.teamLogger
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
 //@Service

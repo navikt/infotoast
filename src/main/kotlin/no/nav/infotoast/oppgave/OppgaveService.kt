@@ -26,13 +26,13 @@ class OppgaveService(
     private val logger = logger()
 
     fun produceOppgave(sykmeldingRecord: SykmeldingRecord, journalpostId: String, person: Person) {
-        val oppgaveRecord = mapOppgaveRecord(sykmeldingRecord, journalpostId, person)
+        val oppgaveRecord = getOppgaveRecord(sykmeldingRecord, journalpostId, person)
 
         oppgaveProducer.opprettOppgave(oppgaveRecord)
         logger.info("Opprettet oppgave for sykmeldingId ${sykmeldingRecord.sykmelding.id}")
     }
 
-    private fun mapOppgaveRecord(
+    private fun getOppgaveRecord(
         sykmeldingRecord: SykmeldingRecord,
         journalpostId: String,
         person: Person
