@@ -7,8 +7,8 @@ import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.kafka.autoconfigure.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
@@ -31,10 +31,10 @@ class KafkaConfig(
     fun containerFactory(
         props: KafkaProperties,
         errorHandler: KafkaErrorHandler
-    ): ConcurrentKafkaListenerContainerFactory<String, ByteArray?> {
+    ): ConcurrentKafkaListenerContainerFactory<String, ByteArray> {
         val consumerFactory =
             DefaultKafkaConsumerFactory(
-                props.buildConsumerProperties(null).apply {
+                props.buildConsumerProperties().apply {
                     put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
                     put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1)
                     put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true)
@@ -43,10 +43,10 @@ class KafkaConfig(
                 ByteArrayDeserializer()
             )
 
-        val factory = ConcurrentKafkaListenerContainerFactory<String, ByteArray?>()
-        factory.consumerFactory = consumerFactory
-        factory.setCommonErrorHandler(errorHandler)
-        return factory
+        return ConcurrentKafkaListenerContainerFactory<String, ByteArray>().apply {
+            setConsumerFactory(consumerFactory)
+            setCommonErrorHandler(errorHandler)
+        }
     }
 
     fun commonConfig() =
