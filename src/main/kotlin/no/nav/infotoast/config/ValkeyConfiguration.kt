@@ -1,10 +1,5 @@
 package no.nav.infotoast.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.time.Duration
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
@@ -13,9 +8,10 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 
 @Configuration
 @EnableCaching
@@ -30,21 +26,15 @@ class ValkeyConfiguration {
         template.keySerializer = StringRedisSerializer()
         template.hashKeySerializer = StringRedisSerializer()
 
-        // Configure ObjectMapper with type information for proper deserialization
-        val objectMapper =
-            ObjectMapper()
-                .registerKotlinModule()
-                .registerModule(JavaTimeModule())
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .activateDefaultTyping(
-                    BasicPolymorphicTypeValidator.builder()
-                        .allowIfBaseType(Any::class.java)
-                        .build(),
-                    ObjectMapper.DefaultTyping.EVERYTHING,
-                    com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY
+        // Use the GenericJacksonJsonRedisSerializer builder to create a serializer with default
+        // typing
+        val jsonSerializer =
+            GenericJacksonJsonRedisSerializer.builder()
+                .enableDefaultTyping(
+                    BasicPolymorphicTypeValidator.builder().allowIfBaseType(Any::class.java).build()
                 )
+                .build()
 
-        val jsonSerializer = GenericJackson2JsonRedisSerializer(objectMapper)
         template.valueSerializer = jsonSerializer
         template.hashValueSerializer = jsonSerializer
 
@@ -54,20 +44,14 @@ class ValkeyConfiguration {
 
     @Bean
     fun cacheManager(connectionFactory: RedisConnectionFactory): RedisCacheManager {
-        val objectMapper =
-            ObjectMapper()
-                .registerKotlinModule()
-                .registerModule(JavaTimeModule())
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .activateDefaultTyping(
-                    BasicPolymorphicTypeValidator.builder()
-                        .allowIfBaseType(Any::class.java)
-                        .build(),
-                    ObjectMapper.DefaultTyping.EVERYTHING,
-                    com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY
+        // Use the GenericJacksonJsonRedisSerializer builder to create a serializer with default
+        // typing
+        val jsonSerializer =
+            GenericJacksonJsonRedisSerializer.builder()
+                .enableDefaultTyping(
+                    BasicPolymorphicTypeValidator.builder().allowIfBaseType(Any::class.java).build()
                 )
-
-        val jsonSerializer = GenericJackson2JsonRedisSerializer(objectMapper)
+                .build()
 
         val cacheConfig =
             RedisCacheConfiguration.defaultCacheConfig()
