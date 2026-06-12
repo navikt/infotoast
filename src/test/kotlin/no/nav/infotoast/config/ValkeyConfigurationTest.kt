@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -18,7 +17,12 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
 @SpringBootTest(
-    classes = [ValkeyConfiguration::class, RedisAutoConfiguration::class],
+    classes =
+        [
+            ValkeyConfiguration::class,
+            org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration::class,
+            org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration::class
+        ],
     properties = ["spring.main.web-application-type=none"]
 )
 @Testcontainers
