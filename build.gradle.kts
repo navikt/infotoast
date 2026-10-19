@@ -23,7 +23,7 @@ dependencies {
 
     implementation(tsmKtorLibs.core)
     implementation(tsmKtorLibs.kafka)
-    implementation(libs.tsm.sykmeldinger.input)
+    implementation(tsmKtorLibs.kafka.sykmeldinger)
 
 
     implementation(libs.logback.classic)

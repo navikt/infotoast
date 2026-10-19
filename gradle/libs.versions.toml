@@ -10,15 +10,10 @@ detekt = "2.0.0-alpha.6"
 ktfmt = "0.62"
 kotest = "6.2.6"
 
-tsm-sykmeldinger-input = "30"
-
 [libraries]
 # Monitoring and observability
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logbackEncoder" }
-
-# Tsm dependencies
-tsm-sykmeldinger-input = { module = "no.nav.tsm.sykmelding:input", version.ref = "tsm-sykmeldinger-input" }
 
 # Testing
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
