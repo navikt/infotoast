@@ -69,7 +69,7 @@ jobs:
         run: |
           nais apply .nais/app.yaml \
             --environment prod-gcp \
-            --set spec.image="${{ needs.build-prod.outputs.image }}" \
+            --set spec.image="${{ needs.build.outputs.image }}" \
             --wait
 
   security:
