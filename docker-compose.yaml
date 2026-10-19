@@ -1,52 +1,6 @@
-version: '3.8'
 services:
   kafka:
-    image: bitnami/kafka:latest
-    container_name: kafka
+    image: confluentinc/confluent-local:8.1.0
+    container_name: infotoast-dev-kafka
     ports:
       - "9092:9092"
-    environment:
-      KAFKA_CFG_NODE_ID: 1
-      KAFKA_CFG_PROCESS_ROLES: broker,controller
-      KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
-      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
-
-  ibmmq:
-    image: ibmcom/mq:latest
-    container_name: ibmmq
-    ports:
-      - "1414:1414"
-      - "9443:9443"
-    environment:
-      LICENSE: accept
-      MQ_QMGR_NAME: QM1
-      MQ_APP_PASSWORD: passw0rd
-      MQ_ADMIN_PASSWORD: passw0rd
-    volumes:
-      - mq-data:/mnt/mqm
-    healthcheck:
-      test: ["CMD", "dspmq"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  valkey:
-    image: valkey/valkey:latest
-    container_name: valkey
-    ports:
-      - "6379:6379"
-    command: valkey-server --appendonly yes
-    volumes:
-      - valkey-data:/data
-    healthcheck:
-      test: ["CMD", "valkey-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  mq-data:
-  valkey-data:

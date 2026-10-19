@@ -1,0 +1,34 @@
+[versions]
+jvmVersion = "25"
+
+kotlin = "2.4.20"
+logback = "1.6.5"
+logbackEncoder = "9.0"
+spotless = "8.10.4"
+jackson = "3.2.2"
+detekt = "2.0.0-alpha.6"
+ktfmt = "0.62"
+kotest = "6.2.6"
+
+tsm-sykmeldinger-input = "30"
+
+[libraries]
+# Monitoring and observability
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logbackEncoder" }
+
+# Tsm dependencies
+tsm-sykmeldinger-input = { module = "no.nav.tsm.sykmelding:input", version.ref = "tsm-sykmeldinger-input" }
+
+# Testing
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotest = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+
+
+# Transitive Vulnerabilities
+jackson-core = { module = "tools.jackson.core:jackson-core", version.ref = "jackson" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+detekt = { id = "dev.detekt",  version.ref = "detekt" }

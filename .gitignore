@@ -1,11 +1,25 @@
-HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### STS ###
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Kotlin ###
+.kotlin
+
+### Eclipse ###
 .apt_generated
 .classpath
 .factorypath
@@ -17,15 +31,6 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -36,26 +41,9 @@ out/
 ### VS Code ###
 .vscode/
 
-### Kotlin ###
-.kotlin
-logs/
-
-# Gradle files
-build/
-.gradle/
-
-# Securelogs
-secure.log
-
-.junie/
-
-# Used for local development
-src/main/resources/application-dev-kafka.yaml
-
-# Mac
+### Mac OS ###
 .DS_Store
 
-# Temporary files
-/syfosminfotrygd/
-/journey/
-/docs/
+# Idea project files
+*.iml
+.idea/

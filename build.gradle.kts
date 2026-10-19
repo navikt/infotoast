@@ -1,135 +1,112 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
-import org.gradle.kotlin.dsl.assign
-import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.springframework.boot.gradle.tasks.bundling.BootJar
-
-val javaVersion = JvmTarget.JVM_21
-
-//runtime deps
-val logstashLogbackEncoderVersion = "8.1"
-val sykmeldingInputVersion = "13"
-val ibmMqVersion = "9.4.3.0"
-val googleCloudStorageVersion = "2.50.0"
-val syfoXmlCodegenVersion = "2.0.1"
-val jaxbRuntimeVersion = "2.4.0-b180830.0438"
-val jaxbApiVersion = "2.4.0-b180830.0359"
-val javaTimeAdapterVersion = "1.1.3"
-
-
-// dev deps
-val ktfmtVersion = "0.44"
-val testContainersVersion = "1.21.3"
-val mockkVersion = "1.13.8"
-
-plugins {
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
-    id("org.springframework.boot") version "3.5.4"
-
-    //other plugins
-    id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "7.2.1"
-    id("com.github.ben-manes.versions") version "0.52.0"
-}
-
-kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
-}
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import dev.detekt.gradle.Detekt
 
 group = "no.nav.tsm"
-version = "0.0.2"
-java.sourceCompatibility = JavaVersion.VERSION_21
+version = "0.0.1"
 
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(ktorLibs.plugins.ktor)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.detekt)
+}
 
-repositories {
-    mavenCentral()
-    maven(url = "https://packages.confluent.io/maven/")
-    maven {
-        url = uri("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
-    }
+application {
+    mainClass = "io.ktor.server.netty.EngineMain"
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation(ktorLibs.server.core)
+    implementation(ktorLibs.server.netty)
 
-    // do we need oauth 2 resource server and client?
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
-    implementation("org.springframework.kafka:spring-kafka")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
-    implementation("net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}")
-    implementation("no.nav.tsm.sykmelding", "input", sykmeldingInputVersion)
-    implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("com.ibm.mq:com.ibm.mq.jakarta.client:${ibmMqVersion}")
-    implementation("com.google.cloud:google-cloud-storage:${googleCloudStorageVersion}")
-    implementation("no.nav.helse.xml:sm2013:${syfoXmlCodegenVersion}")
-    implementation("no.nav.helse.xml:xmlfellesformat:${syfoXmlCodegenVersion}")
-    implementation("no.nav.helse.xml:kith-hodemelding:${syfoXmlCodegenVersion}")
-    implementation("no.nav.helse.xml:kith-apprec:${syfoXmlCodegenVersion}")
-    implementation("javax.xml.bind:jaxb-api:${jaxbApiVersion}")
-    implementation("org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}")
-    implementation("com.migesok", "jaxb-java-time-adapters", javaTimeAdapterVersion)
-    //TODO add open telemetry?
+    implementation(tsmKtorLibs.core)
+    implementation(tsmKtorLibs.kafka)
+    implementation(libs.tsm.sykmeldinger.input)
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.kafka:spring-kafka-test")
-    testImplementation("org.testcontainers:kafka:${testContainersVersion}")
-    testImplementation("org.testcontainers:junit-jupiter:${testContainersVersion}")
-    testImplementation("io.mockk:mockk:${mockkVersion}")
+
+    implementation(libs.logback.classic)
+    implementation(libs.logback.encoder)
+    constraints {
+        implementation(libs.jackson.core) {
+            because("Vulnerability CVE-2026-29062 from libs.logback.encoder")
+        }
+    }
+
+    testImplementation(libs.kotlin.test.junit)
+    testImplementation(ktorLibs.server.testHost)
+    testImplementation(ktorLibs.serialization.jackson3)
+    testImplementation(ktorLibs.client.contentNegotiation)
+    testImplementation(tsmKtorLibs.kafka.test)
+    testImplementation(libs.kotest)
+
+
 }
 
-
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
-        jvmTarget.set(javaVersion)
-    }
+    jvmToolchain(libs.versions.jvmVersion.get().toInt())
 }
 
 tasks {
-
-    build { dependsOn("bootJar") }
-
-    withType<BootJar> {
-        archiveFileName = "app.jar"
-    }
-
-    withType<Test> {
-        useJUnitPlatform {}
-        testLogging {
-            events("skipped", "failed")
-            showStackTraces = true
-            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-        }
-        systemProperty("spring.profiles.active", "test")
-    }
-
-    register<Exec>("addPreCommitGitHookOnBuild") {
-        doFirst {
-            println("⚈ ⚈ ⚈ Running Add Pre Commit Git Hook Script on Build ⚈ ⚈ ⚈")
-        }
-        commandLine("cp", "./.scripts/pre-commit", "./.git/hooks")
-        doLast {
-            println("✅ Added Pre Commit Git Hook Script.")
+    shadowJar {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        mergeServiceFiles {}
+        from("src/main/resources/logback.xml") {
+            into("/")
         }
     }
 
     configure<SpotlessExtension> {
-        kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
+        kotlin { ktfmt(libs.versions.ktfmt.get()).kotlinlangStyle() }
         check {
             dependsOn("spotlessApply")
         }
+    }
+
+    register<Exec>("preRunLocal") {
+        description = "running application local"
+        group = "application"
+        commandLine("./scripts/pre-dev.sh")
+    }
+
+    register<JavaExec>("runLocal") {
+        description = "Running application locally"
+        group = "application"
+        mainClass.set("io.ktor.server.netty.EngineMain")
+        classpath = sourceSets["main"].runtimeClasspath
+
+        args("-config=application-local.conf")
+        jvmArgs("-Dio.ktor.development=true", "-Dlogback.configurationFile=logback-local.xml")
+
+        dependsOn("preRunLocal")
+
+    }
+
+    withType<Detekt>().configureEach {
+        config.setFrom(file("detekt.yml"))
+        buildUponDefaultConfig = true
+
+        dependsOn("spotlessApply")
+    }
+
+    named<DependencyUpdatesTask>("dependencyUpdates") {
+        fun String.isNonStable(): Boolean {
+            val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { uppercase().contains(it) }
+            val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+            val isStable = stableKeyword || regex.matches(this)
+            return isStable.not()
+        }
+
+        rejectVersionIf {
+            candidate.version.isNonStable()
+        }
+    }
+
+}
+
+afterEvaluate {
+    tasks.named("check") {
+        setDependsOn(dependsOn.filter { !it.toString().contains("detekt") })
     }
 }
