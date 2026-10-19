@@ -16,9 +16,7 @@ private fun Application.configureConsumer() {
     install(SykmeldingerConsumer) {
         clientId = env.runtime.name
         groupId = "infotoast-consumer"
-        onRecord = { record, _ ->
-            log.info("Received a Sykmelding for ID: ${record.sykmelding.id}")
-        }
+        onRecord = { record, _ -> }
         onTombstone = { meta ->
             log.info("Received a Sykmelding tombstone for ID ${meta.key}, skips")
         }
