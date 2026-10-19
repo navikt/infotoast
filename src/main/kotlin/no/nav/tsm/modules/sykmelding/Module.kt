@@ -17,7 +17,7 @@ private fun Application.configureConsumer() {
         clientId = env.runtime.name
         groupId = "infotoast-consumer"
         onRecord = { record, _ ->
-            /*TODO handle it*/)
+            Unit)
         }
         onTombstone = { meta ->
             log.info("Received a Sykmelding tombstone for ID ${meta.key}, skips")
