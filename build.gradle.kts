@@ -45,7 +45,9 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvmVersion.get().toInt())
+    jvmToolchain {
+        languageVersion.set(libs.versions.jvmVersion.map { JavaLanguageVersion.of(it) })
+    }
 }
 
 tasks {
@@ -59,9 +61,11 @@ tasks {
 
     configure<SpotlessExtension> {
         kotlin { ktfmt(libs.versions.ktfmt.get()).kotlinlangStyle() }
-        check {
-            dependsOn("spotlessApply")
-        }
+    }
+
+    check {
+        setDependsOn(dependsOn.filter { !it.toString().contains("detekt") })
+        dependsOn("spotlessApply")
     }
 
     register<Exec>("preRunLocal") {
@@ -103,10 +107,4 @@ tasks {
         }
     }
 
-}
-
-afterEvaluate {
-    tasks.named("check") {
-        setDependsOn(dependsOn.filter { !it.toString().contains("detekt") })
-    }
 }
