@@ -14,7 +14,6 @@
     <logger name="ch.qos.logback" level="WARN"/>
     <logger name="org.apache.kafka" level="WARN"/>
 
-    <!-- Local development, redirect secure logs to console with nice colors -->
     <appender name="TEAM_LOG" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>
@@ -23,7 +22,6 @@
         </encoder>
     </appender>
 
-    <!-- Pretty console appender for local development -->
     <appender name="PRETTY-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>

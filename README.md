@@ -66,7 +66,6 @@ docker compose exec -T kafka kafka-console-producer \
   < src/test/resources/kafkaMessage.txt
 ```
 
-
 ### Finding new available dependencies
 ``` bash
 ./gradlew dependencyUpdates

@@ -10,8 +10,8 @@ metadata:
 spec:
   port: 8080
   replicas:
-    min: 2
-    max: 4
+    min: 1
+    max: 2
     scalingStrategy:
       cpu:
         thresholdPercentage: 90
@@ -19,8 +19,8 @@ spec:
     limits:
       memory: 1Gi
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 80m
+      memory: 600Mi
   liveness:
     path: /internal/health/alive
   readiness:

@@ -2,7 +2,7 @@ rootProject.name = "infotoast"
 
 
 val ktorVersion = "3.6.0"
-val tsmKtorVersion = "1.3.5"
+val tsmKtorVersion = "1.3.6"
 
 dependencyResolutionManagement {
     repositories {

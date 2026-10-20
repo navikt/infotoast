@@ -25,4 +25,13 @@ class MonitoringTest {
 
         httpResponse.status.value shouldEqual 200
     }
+
+    @Test
+    fun `validate ready endpoint returns 200 http status code`() = testApplication {
+        configureMonitoringTest()
+
+        val httpResponse = client.get("/internal/health/ready")
+
+        httpResponse.status.value shouldEqual 200
+    }
 }
