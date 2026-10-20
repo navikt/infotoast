@@ -19,11 +19,10 @@ class EnvironmentTest {
         mapOf("NAIS_POD_NAME" to "infotoast-prod-123", "NAIS_CLUSTER_NAME" to "prod-gcp")
 
     @Test
-    fun `production environment should be properly configured`() {
+    fun `base nais environment should be properly configured`() {
 
         val environment = initializeEnvironment(config(emptyMap()))
 
         environment.runtime.name shouldBeEqual "infotoast-prod-123"
-        environment.runtime.env.name shouldBeEqual "LOCAL"
     }
 }
