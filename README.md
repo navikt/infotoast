@@ -43,15 +43,28 @@ To build the application locally and run tests you can simply run
 ### Running the application locally
 Run in development to enable hot reloading and stubbed external dependencies:
 
-With Gradle :
+#### With Gradle and Docker Compose
 
 ``` bash
 ./gradlew runLocal
 ```
 
-With IntelliJ:
-In IntelliJ run configuration, first run the main function, then edit it to add `-Dio.ktor.development=true` to the VM
-options, and `-config=application-local.conf` in "program options".
+#### With IntelliJ
+
+In IntelliJ go to the run the main function,
+then "Modify Run configuration..."
+then add `-Dio.ktor.development=true -config=application-local.conf` to the "Program arguments".
+
+#### Kafka message
+To send a messages to the topic tsm.sykmeldinger
+```bash
+docker compose exec -T kafka kafka-console-producer \
+  --bootstrap-server localhost:9092 \
+  --topic tsm.sykmeldinger \
+  --property parse.key=true \
+  --property key.separator=: \
+  < src/test/resources/kafkaMessage.txt
+```
 
 
 ### Finding new available dependencies
