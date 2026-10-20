@@ -77,6 +77,12 @@ docker compose exec -T kafka kafka-console-producer \
 ./gradlew :wrapper --gradle-version latest
 ```
 
+## Contributing
+
+To get started, fork the repository and create a new branch.
+
+See details in [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ### Contact
 
 This project is maintained by [navikt/tsm](CODEOWNERS)
